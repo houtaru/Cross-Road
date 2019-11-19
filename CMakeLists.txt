@@ -5,14 +5,19 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
+include_directories(
+    include/
+    ${SDL2_INCLUDE_DIR}
+    ${SDL2_IMAGE_INCLUDE_DIRS}
+)
+
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 file(GLOB_RECURSE PROJECT_HEADERS "include/*.hpp")
 
-set(PROJECT_INCLUDE_DIRS "")
-foreach(_headerFile ${PROJECT_HEADERS})
+set(PROJECT_INCLUDE_DIRS "./")
+    foreach(_headerFile ${PROJECT_HEADERS})
     get_filename_component(_dir ${_headerFile} PATH)
     list (APPEND PROJECT_INCLUDE_DIRS ${_dir})
-
 endforeach()
 
 list(REMOVE_DUPLICATES PROJECT_INCLUDE_DIRS)
