@@ -5,9 +5,6 @@ Box::Box(const Box &other) {}
 Box::~Box() {}
 
 array<int, 4> Box::Position() { return {x1, x2, y1, x2}; }
-void Box::Output() {
-    cout << x1 << " " << x2 << " " << y1 << " " y2 << endl;
-}
 
 // Check collision
 bool Box::operator==(const Box &other) {
