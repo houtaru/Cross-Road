@@ -2,6 +2,7 @@
 #include "pointer.hpp"
 #include "exception.hpp"
 
+#include <memory>
 #include <iostream>
 
 using namespace std;
@@ -97,7 +98,7 @@ shared_ptr<SDL_Texture> View::createTexture(const string &path) {
     return res;
 }
 
-shared_ptr<SDL_Texture> View::createTextureText(const string &text, int fontSize, SDL_Rect *rect, bool isBold = false) {
+shared_ptr<SDL_Texture> View::createTextureText(const string &text, int fontSize, SDL_Rect *rect, bool isBold) {
     shared_ptr<TTF_Font> font;
     if (isBold) {
         font = Pointer::createTtfFont(

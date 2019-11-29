@@ -4,6 +4,8 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
+using namespace std;
+
 shared_ptr<Game> Game::instance(nullptr);
 shared_ptr<View> Game::view = View::getInstance();
 

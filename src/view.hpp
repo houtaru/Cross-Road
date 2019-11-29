@@ -25,7 +25,7 @@ class View {
         void renderFontObject(std::shared_ptr<FontObject> obj, int align = 0);
         void renderFontObject(std::vector<std::shared_ptr<FontObject>> objs, int align = 0);
         
-        shared_ptr<SDL_Window> getWindow();
+        std::shared_ptr<SDL_Window> getWindow();
 
     private:
         static std::shared_ptr<View> instance;
@@ -41,7 +41,7 @@ class View {
         void initImage();
         void initTextureText();
 
-        shared_ptr<SDL_Surface> createSurface(const string &path);
-        shared_ptr<SDL_Texture> createTexture(const string &path);
-        shared_ptr<SDL_Texture> createTextureText(const string &text, int fontSize, SDL_Rect *rect, bool isBold = false);
+        std::shared_ptr<SDL_Surface> createSurface(const std::string &path);
+        std::shared_ptr<SDL_Texture> createTexture(const std::string &path);
+        std::shared_ptr<SDL_Texture> createTextureText(const std::string &text, int fontSize, SDL_Rect *rect, bool isBold = false);
 };
