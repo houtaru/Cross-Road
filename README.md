@@ -16,5 +16,10 @@ cmake ..
 ### RUN
 ```
 make
-./cross_road
+./src/cross_road
+```
+
+### Test
+```
+./tes/unit_tests
 ```
