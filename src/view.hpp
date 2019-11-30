@@ -1,6 +1,6 @@
 #pragma once
-#include "exception.hpp"
 #include "object.hpp"
+#include "exception.hpp"
 
 #include <memory>
 #include <vector>

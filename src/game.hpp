@@ -1,5 +1,6 @@
 #pragma once
 #include "view.hpp"
+#include "sound.hpp"
 
 #include <memory>
 
@@ -15,4 +16,5 @@ class Game {
 	private:
 		static std::shared_ptr<Game> instance;
 		static std::shared_ptr<View> view;
+		static std::shared_ptr<Sound> sound;
 };

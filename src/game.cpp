@@ -12,6 +12,7 @@ using namespace std;
 
 shared_ptr<Game> Game::instance(nullptr);
 shared_ptr<View> Game::view = View::getInstance();
+shared_ptr<Sound> Game::sound = Sound::getInstance();
 
 shared_ptr<Game> Game::getInstance() {
     if (instance == nullptr)
@@ -24,9 +25,6 @@ Game::Game() {
 }
 
 Game::~Game() {
-    IMG_Quit();
-    TTF_Quit();
-    SDL_Quit();
     cerr << "Destructing Game...\n";
 }
 
@@ -36,4 +34,5 @@ void Game::start() {
     }
     cerr << "Start game...\n";
     view->startSDL();
+    sound->initSound();
 }

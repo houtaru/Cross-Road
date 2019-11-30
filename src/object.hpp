@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <memory>
+#include <functional>
 
 #ifdef __APPLE__
     #include <SDL.h>
@@ -35,4 +37,12 @@ struct FontObject {
         text(_text), fontSize(_fontSize), rect(_rect), isBold(false) {}
     FontObject(std::string _text, int _fontSize, const SDL_Rect &_rect, bool _isBold):
         text(_text), fontSize(_fontSize), rect(_rect), isBold(_isBold) {}
+};
+
+struct Button {
+    std::shared_ptr<Object> obj;
+    std::function<void()> callback;
+    Button(): obj(), callback() {}
+    Button(std::shared_ptr<Object> _obj, std::function<void()> _callback):
+        obj(_obj), callback(_callback) {}
 };
