@@ -50,4 +50,5 @@ std::shared_ptr<TTF_Font> Pointer::createTtfFont(TTF_Font *p) {
         p = nullptr;
         cerr << "Close temporary font successfull!\n";
     });
+    return res;
 }

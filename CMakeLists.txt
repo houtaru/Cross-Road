@@ -17,19 +17,6 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 endif()
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
-
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-
-include_directories(
-    ${SDL2_INCLUDE_DIR}
-    ${SDL2_IMAGE_INCLUDE_DIR}
-    ${SDL2_TTF_INCLUDE_DIR}
-    ${SDL2_MIXER_INCLUDE_DIR}
-)
-
 add_subdirectory(src)
 
 include(${PROJECT_SOURCE_DIR}/cmake/googletest.cmake)
