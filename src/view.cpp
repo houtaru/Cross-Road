@@ -1,5 +1,6 @@
 #include "view.hpp"
 #include "pointer.hpp"
+#include "constants.hpp"
 #include "exception.hpp"
 
 #include <memory>
@@ -49,11 +50,11 @@ void View::init() {
 void View::initWindow() {
     window = Pointer::createSdlWindow(
         SDL_CreateWindow(
-            "aaa",
+            Constants::GAME_TITLE,
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
-            640,
-            480,
+            Constants::SCREEN_WIDTH,
+            Constants::SCREEN_HEIGHT,
             SDL_WINDOW_SHOWN
         )
     );

@@ -21,5 +21,5 @@ make
 
 ### Test
 ```
-./tes/unit_tests
+./test/unit_tests
 ```
