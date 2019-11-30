@@ -2,7 +2,11 @@
 #include "exception.hpp"
 
 #include <iostream>
-#include <SDL2/SDL.h>
+#ifdef __APPLE__
+    #include <SDL.h>
+#else
+    #include <SDL2/SDL.h>
+#endif
 
 using namespace std;
 
