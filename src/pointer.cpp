@@ -43,6 +43,26 @@ shared_ptr<SDL_Texture> Pointer::createSdlTexture(SDL_Texture *p) {
     return res;
 }
 
+std::shared_ptr<Mix_Music> Pointer::createMixMusic(Mix_Music *p) {
+    shared_ptr<Mix_Music> res(p, [](Mix_Music *p) {
+        if (p != nullptr)
+            Mix_FreeMusic(p);
+        p = nullptr;
+        cerr << "Free temporary mix music done!\n";
+    });
+    return res;
+}
+
+std::shared_ptr<Mix_Chunk> Pointer::createMixChunk(Mix_Chunk *p) {
+    shared_ptr<Mix_Chunk> res(p, [](Mix_Chunk *p) {
+        if (p != nullptr)
+            Mix_FreeChunk(p);
+        p = nullptr;
+        cerr << "Free temporary mix chunk done!\n";
+    });
+    return res;
+}
+
 std::shared_ptr<TTF_Font> Pointer::createTtfFont(TTF_Font *p) {
     shared_ptr<TTF_Font> res(p, [](TTF_Font *p) {
         if (p != nullptr)

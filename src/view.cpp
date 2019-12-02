@@ -23,6 +23,9 @@ View::View():
 }
 
 View::~View() {
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
     cerr << "Destructing view...\n";
 }
 
