@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
-#include <string>
+#include <string>   //  std::string
 #include "constant.hpp"
 
 class Texture {
@@ -13,7 +13,9 @@ class Texture {
         Texture(SDL_Renderer *&ren);
         virtual ~Texture();
 
-        // Get rid of the exissting texture
+        //  @brief
+        //  
+        //  Get rid of the exissting texture
         void Free();
 
         //  @brief
@@ -23,6 +25,10 @@ class Texture {
         //  renderer: The renderer of SDL
         //  path: the local path to file
         void Load(std::string path);
+
+        //  @brief
+        //  An empty class to access in Object class in polymorphism
+        virtual bool Move();
 
         //  @brief
         //  Render texture at given point and given property
@@ -35,10 +41,10 @@ class Texture {
         //  flip: An SDL_RendererFlip value stating which flipping actions should be performed on the texture
         virtual void Render(
             int x=0, int y=0, 
+            SDL_RendererFlip flip=SDL_FLIP_NONE,
             SDL_Rect *clip=NULL, 
             double angle=0.0, 
-            SDL_Point *center=NULL, 
-            SDL_RendererFlip flip=SDL_FLIP_NONE
+            SDL_Point *center=NULL
         );
 
         int GetWidth() const;

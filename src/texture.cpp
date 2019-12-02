@@ -12,6 +12,8 @@ Texture::Texture(SDL_Renderer *&ren) {
 }
 Texture::~Texture() { Free(); }
 
+//  @brief  
+//
 //  Get rid of the existing texture
 void Texture::Free() {
     if (texture) {
@@ -31,14 +33,14 @@ void Texture::Load(std::string path) {
 
     //  Load an image from an specific path
     SDL_Surface *loadedSurface = IMG_Load(path.c_str());
-    if (!loadedSurface) throw "Unable to load image " + path + "! SDL_image Error: " + IMG_GetError();
+    if (!loadedSurface) throw IMG_GetError();
 
     //  Color key image
     SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 
     //  Create texture from surface pixels
     texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-    if (!texture) throw "Unable to create texture from " + path + "! SDL Error: " + SDL_GetError();
+    if (!texture) throw SDL_GetError();
 
     //  Get texture size
     w = loadedSurface->w;
@@ -47,6 +49,10 @@ void Texture::Load(std::string path) {
     //  Get rid of loaded surface
     SDL_FreeSurface(loadedSurface);
 }   
+
+//  @brief
+//  An empty class to access in Object in polymorphism
+bool Texture::Move() { return true; }
 
 //  @brief
 //  Render texture at given point and given property
@@ -58,11 +64,11 @@ void Texture::Load(std::string path) {
 //  center: A pointer to a point indicating the point around which dstrect will be rotated (if NULL, rotation will be done around dstrect.w/2, dstrect.h/2).
 //  flip: An SDL_RendererFlip value stating which flipping actions should be performed on the texture
 void Texture::Render(
-    int x, int y, 
+    int x, int y,  
+    SDL_RendererFlip flip,
     SDL_Rect *clip, 
     double angle, 
-    SDL_Point *center, 
-    SDL_RendererFlip flip
+    SDL_Point *center
 ) {
     //  Set rendering space
     SDL_Rect renderQuad = { x, y, w, h, };

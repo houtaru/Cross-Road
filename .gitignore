@@ -63,3 +63,11 @@ _deps
 
 # Custom
 main.cpp
+
+# Vim {{{
+*.swp
+# }}}
+
+# Dolphin {{{
+.directory
+# }}}

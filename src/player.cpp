@@ -32,7 +32,7 @@ void Player::SetVel(SDL_Event &e) {
 
 //  @brief
 //  Move the player
-void Player::Move() {
+bool Player::Move() {
     //  Move the player left or right
     x += velX;
     box.x = x;
@@ -44,6 +44,8 @@ void Player::Move() {
     box.y = y;
     //  If the player went too far up or down
     if ((y < 0) || (y+h > SCREEN_HEIGHT)) y -= velY;
+
+    return true;
 }
 
 //  @brief

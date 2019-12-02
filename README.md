@@ -16,5 +16,5 @@ cmake ..
 ### RUN
 ```
 make
-./cross_road
+./src/cross_road
 ```

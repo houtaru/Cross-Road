@@ -9,7 +9,7 @@ class Player : public Object {
         Player(SDL_Renderer *&ren, int xSub=0, int ySub=0);
         ~Player();
 
-        static const int VELOCITY = 5;
+        static const int VELOCITY = 6;
 
         //  @brief
         //  Set velocity according to the key player pressed
@@ -20,7 +20,7 @@ class Player : public Object {
 
         //  @brief
         //  Move the player
-        void Move();
+        bool Move();
 
         //  @brief
         //  Check whether player collide object or not
