@@ -1,5 +1,8 @@
 {
     "files.associations": {
+        "SDL.h": "cpp",
+        "SDL_image.h": "cpp",
+        "SDL_mixer.h": "cpp",
         "array": "cpp",
         "utility": "cpp",
         "iosfwd": "cpp",

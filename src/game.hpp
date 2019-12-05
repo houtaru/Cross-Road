@@ -11,11 +11,12 @@
 #include <cstdlib>  //  srand(), rand()
 #include <thread>   //  thread
 #include <future>   //  std::future, std::async
-#include <glob.h>
-#include <sstream>
+#include <glob.h>   //  glob()
+#include <sstream>  //  sstrean
 #include <string.h> //  memset()
-#include <stdexcept>
+#include <stdexcept>//  std::runtime_error()
 #include <utility>  //  pair
+
 #include "constant.hpp"
 #include "texture.hpp"
 #include "object.hpp"
