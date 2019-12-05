@@ -2,6 +2,7 @@
 #define player_hpp
 
 #include "object.hpp"
+#include <vector>
 
 class Player : public Object {
     public:
@@ -20,14 +21,10 @@ class Player : public Object {
 
         //  @brief
         //  Move the player
-        bool Move();
-
-        //  @brief
-        //  Check whether player collide object or not
         //
-        //  @param:
-        //  other: Other object on screen
-        bool CheckCollision(Object *&other);
+        //  @param
+        //  stuff: Vector of stuffs to not overlap
+        bool Move(std::vector<std::vector<Object*>> &stuff);
 
     private:
         //  The velocity

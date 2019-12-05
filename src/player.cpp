@@ -32,54 +32,35 @@ void Player::SetVel(SDL_Event &e) {
 
 //  @brief
 //  Move the player
-bool Player::Move() {
+// 
+//  @param
+//  stuff: Vector of stuffs to not overlap
+bool Player::Move(std::vector<std::vector<Object*>> &stuff) {
     //  Move the player left or right
     x += velX;
     box.x = x;
     //  If the player went too far left or right 
     if ((x < 0) || (x+w > SCREEN_WIDTH)) x -= velX;
+    //  If the player overlapped stuff
+    for (int i = 0; i < stuff.size(); ++i) {
+        for (int j = 0; j < stuff[i].size(); ++j)
+            if (CheckCollision(stuff[i][j])) {
+                x -= velX;
+            }
+    }
 
     //  Move the player up or down
     y += velY;
-    box.y = y;
+    box.y = y + (h - ROCK_HEIGHT);
     //  If the player went too far up or down
     if ((y < 0) || (y+h > SCREEN_HEIGHT)) y -= velY;
+    //  If the player overlapped stuff
+    for (int i = 0; i < stuff.size(); ++i) {
+        for (int j = 0; j < stuff[i].size(); ++j)
+            if (CheckCollision(stuff[i][j])) {
+                y -= velY;
+            }
+    }
 
-    return true;
-}
-
-//  @brief
-//  Check whether player collide object or not
-//
-//  @param:
-//  other: Other object on screen
-bool Player::CheckCollision(Object *&other) {
-    SDL_Rect otherBox = other->GetBox();
-
-    //  The sides of the rectangles
-    int leftA, leftB;
-    int rightA, rightB;
-    int topA, topB;
-    int bottomA, bottomB;
-
-    //  Calculate the sides of rect A
-    leftA = box.x;
-    rightA = box.x + box.w;
-    topA = box.y;
-    bottomA = box.y + box.h;
-        
-    //  Calculate the sides of rect B
-    leftB = otherBox.x;
-    rightB = otherBox.x + otherBox.w;
-    topB = otherBox.y;
-    bottomB = otherBox.y + otherBox.h;
-
-	//If any of the sides from A are outside of B
-    if(bottomA <= topB+9) return false;
-    if(topA >= bottomB-9) return false;
-    if(rightA <= leftB+7) return false;
-    if(leftA >= rightB-7) return false;
-
-    //  If none of the sides from A are outside B
     return true;
 }

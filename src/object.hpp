@@ -10,6 +10,28 @@ class Object : public Texture {
         virtual ~Object();
 
         //  @brief
+        //  Load texture from file
+        //
+        //  @param
+        //  renderer: The renderer of SDL
+        //  path: the local path to file
+        void Load(std::string path);
+
+        //  @brief
+        //  Polymorphism for player
+        //
+        //  @param
+        //  e: Event from player
+        virtual void SetVel(SDL_Event &e);
+
+        //  @brief
+        //  Polymorphism for player
+        //
+        //  @param
+        //  stuff: Vector of stuffs to not overlap
+        virtual bool Move(std::vector<std::vector<Object*>> &stuff);
+
+        //  @brief
         //  Move the object
         // 
         //  @param
@@ -17,15 +39,24 @@ class Object : public Texture {
         //
         //  @return
         //  False if object goes further than 0 x-coordinate and true otherwise
-        virtual bool Move(bool checkForward);
+        bool Move(bool checkForward);
 
         //  @brief
         //  Render the object
         void Render(SDL_RendererFlip flip=SDL_FLIP_NONE);
 
+        //  @brief
+        //  Check whether object collides other object or not
+        //
+        //  @param:
+        //  other: Other object on screen
+        bool CheckCollision(Object *&other);
+
         SDL_Rect GetBox() const;
         void SetX(const int &a);
-
+        void SetY(const int &a);
+        void SetW(const int &a);
+        
     protected:
         //  The x and y coordinate
         int x, y;

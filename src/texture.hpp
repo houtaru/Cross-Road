@@ -24,7 +24,7 @@ class Texture {
         //  @param
         //  renderer: The renderer of SDL
         //  path: the local path to file
-        void Load(std::string path);
+        virtual void Load(std::string path);
 
         //  @brief
         //  An empty class to access in Object class in polymorphism

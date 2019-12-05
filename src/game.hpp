@@ -11,6 +11,11 @@
 #include <cstdlib>  //  srand(), rand()
 #include <thread>   //  thread
 #include <future>   //  std::future, std::async
+#include <glob.h>
+#include <sstream>
+#include <string.h> //  memset()
+#include <stdexcept>
+#include <utility>  //  pair
 #include "constant.hpp"
 #include "texture.hpp"
 #include "object.hpp"
@@ -38,27 +43,46 @@ class Game {
 
 
         //  @brief
+        //  Function like glob.glob() in Python
         //
+        //  @return
+        //  The vector of path to all files and folders in that folder
+        //  
+        //  @param
+        //  path: The path to specific folder
+        std::vector<std::string> Glob(const std::string &path);
+
+        //  @brief
         //  Check whether new random object's position overlaps other objects' position or not
-        bool CheckOverlap(const std::vector<Object*> &lane, int random);
+        //
+        //  @param
+        //  objects: Vector of objects
+        //  newObjects: THe new random object
+        bool CheckOverlap(std::vector<Object*> &objects, Object *&newObject);
 
         //  @brief
         //  Load textures and sounds from files
         void LoadMedia(
             std::string groundPath="", 
             std::string playerPath="", 
-            std::string carPath="", 
-            std::string truckPath="",
+            std::string obstaclePath="", 
+            std::string stuffPath="",
             std::string musicPath="",
             std::string diesoundPath=""
         );
 
         //  @brief
         //  Thread renders objects
+        // 
+        //  @param
+        //  i: The i-th thread
         int ThreadRender(int i);
 
         //  #brief
         //  Thread checks collision
+        //
+        //  @param
+        //  i: The i-th thread
         int ThreadCheckCollision(int i);
 
         //  @brief
@@ -71,18 +95,23 @@ class Game {
 
         //  The texture
         Texture *ground;
-        Player *player;
+        Object *player;
 
         //  Link to dynamic textures
-        std::string truckPath;
-        std::string carPath;
+        std::vector<std::string> obstaclePath;
+        //  Link to stuff
+        std::vector<std::string> stuffPath;
 
+        //  Vectors control stuffs
+        std::vector<std::vector<Object*>> stuff;
         //  Vectors control objects on lanes
         std::vector<std::vector<Object*>> obstacle;
 
+        //  y-coordinate position of curb
+        std::pair<int, int> posYcurb[3] = { {0, 75}, {355, 445}, {715, SCREEN_HEIGHT} };
         //  y-coordinate position of lanes
-        int posY[8] = {85, 145, 235, 295, 455, 515, 595, 655};
-        
+        int posYlane[8] = {85, 145, 235, 295, 455, 515, 595, 655};
+    
         //  The sound
         Mix_Music *music;
         Mix_Chunk *diesound;
