@@ -1,16 +1,23 @@
 #ifndef texture_hpp
 #define texture_hpp
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
+#ifdef __APPLE__
+    #include <SDL.h>
+    #include <SDL_image.h>
+    #include <SDL_mixer.h>
+#else
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_image.h>
+    #include <SDL2/SDL_mixer.h>
+#endif
+
 #include <string>   //  std::string
-#include "constant.hpp"
+#include <memory>
 
 class Texture {
     public:
         Texture();
-        Texture(SDL_Renderer *&ren);
+        Texture(std::shared_ptr<SDL_Renderer> &ren);
         virtual ~Texture();
 
         //  @brief
@@ -42,9 +49,9 @@ class Texture {
         virtual void Render(
             int x=0, int y=0, 
             SDL_RendererFlip flip=SDL_FLIP_NONE,
-            SDL_Rect *clip=NULL, 
+            std::shared_ptr<SDL_Rect> clip=nullptr, 
             double angle=0.0, 
-            SDL_Point *center=NULL
+            std::shared_ptr<SDL_Point> center=nullptr
         );
 
         int GetWidth() const;
@@ -52,10 +59,12 @@ class Texture {
 
     protected:
         //  The renderer of SDL
-        SDL_Renderer *renderer;
+        // SDL_Renderer *renderer;
+        std::shared_ptr<SDL_Renderer> renderer;
 
         //  The actual hardware texture
-        SDL_Texture *texture;
+        // SDL_Texture *texture;
+        std::shared_ptr<SDL_Texture> texture;
 
         //  Width and height of the texture
         int w, h;

@@ -1,80 +1,37 @@
 #include "object.hpp"
-#include "player.hpp"
 
-Object::Object() : Texture() {
-    x = y = 0;
-    box.x = x;
-    box.y = y + (h - ROCK_HEIGHT);
-    box.w = w;
-    box.h = ROCK_HEIGHT;
-} 
-Object::Object(SDL_Renderer *&ren, int xSub, int ySub) : Texture(ren) {
-    x = xSub;
-    y = ySub;
-    box.x = xSub;
-    box.y = ySub + (h - ROCK_HEIGHT);
-    box.w = w;
-    box.h = ROCK_HEIGHT;
-} 
-Object::~Object() {}
+using namespace std;
 
-//  @brief
-//  Load texture from file
-//
-//  @param
-//  renderer: The renderer of SDL
-//  path: the local path to file
-void Object::Load(std::string path) {
-    Texture::Load(path);
-    box.w = w;
-    box.h = ROCK_HEIGHT;
-    box.y = y + (h - ROCK_HEIGHT);
+Object::Object():
+    x(0), y(0), 
+    velocity({7, 0})
+{
 }
 
-//  @brief
-//  Polymorphism
-void Object::SetVel(SDL_Event &e) {}
-
-//  @brief
-//  Polymorphism for player
-//
-//  @param
-//  stuff: Vector of stuffs to not overlap
-bool Object::Move(std::vector<std::vector<Object*>> &stuff) { return true; }
-
-//  @brief
-//  Move the object
-//
-//  @param
-//  checkForward: True if forward lane and false if backward
-//
-//  @return
-//  False if object goes further than 0 x-coordinate and true otherwise
-bool Object::Move(bool checkForward) {
-    if (
-        (x <= 0 - w && checkForward) ||
-        (x >= SCREEN_WIDTH + w && !checkForward)
-    ) return false;
-    else {
-        x += (checkForward ? -7 : 7);
-        box.x = x;
-        return true;
-    }
+Object::Object(string path, SDL_Rect rect, bool _flip):
+    x(0), y(0),
+    velocity({10, 0}),
+    obj(new Texture(path, rect, _flip))
+{
 }
 
-//  @brief
-//  Render the object
-void Object::Render(SDL_RendererFlip flip) { 
-    Texture::Render(x, y, flip);
+Object::~Object() {
 }
 
-//  @brief
-//  Check whether object collide other object or not
-//
-//  @param:
-//  other: Other object on screen
-bool Object::CheckCollision(Object *&other) {
-    SDL_Rect otherBox = other->GetBox();
+SDL_Rect Object::getBox() const {
+    return SDL_Rect({
+        x, y + obj->rect.h - Constants::ROCK_HEIGHT,
+        obj->rect.w, Constants::ROCK_HEIGHT
+    });
+}
+
+shared_ptr<Texture> Object::getTexture() const {
+    return obj;
+}
+
+bool Object::isCollision(std::shared_ptr<Object> &other) {
+    SDL_Rect otherBox = other->getBox();
+    SDL_Rect box = this->getBox();
 
     //  The sides of the rectangles
     int leftA, leftB;
@@ -87,7 +44,7 @@ bool Object::CheckCollision(Object *&other) {
     rightA = box.x + box.w;
     topA = box.y;
     bottomA = box.y + box.h;
-        
+
     //  Calculate the sides of rect B
     leftB = otherBox.x;
     rightB = otherBox.x + otherBox.w;
@@ -104,7 +61,50 @@ bool Object::CheckCollision(Object *&other) {
     return true;
 }
 
-SDL_Rect Object::GetBox() const { return box; }
-void Object::SetX(const int &a) { x = a; box.x = a; }
-void Object::SetY(const int &a) { y = a; box.y = a + (h - ROCK_HEIGHT); }
-void Object::SetW(const int &a) { box.w = a; box.x = x + (w - box.w)/2; }
+void Object::setX(int _posX) {
+    obj->rect.x = x = _posX;
+}
+
+void Object::setY(int _posY) {
+    obj->rect.y = y = _posY;
+}
+
+bool Object::Move(bool checkForward) {
+    if (
+        (x <= 0 - obj->rect.w && checkForward) ||
+        (x >= Constants::SCREEN_WIDTH + obj->rect.w && !checkForward)
+    ) return false;
+    else {
+        x += (checkForward ? -velocity[0] : velocity[0]);
+        obj->rect.x = x;
+        return true;
+    }
+}
+
+// Extra fucntions definition
+//
+// Load path of all files from `path` in system.
+// 
+void Glob(vector<string> &list, string path) {
+    // glob struct resides on the stack
+    glob_t glob_result;
+    memset(&glob_result, 0, sizeof(glob_result));
+
+    // do the glob operation
+    int return_value = glob(path.c_str(), GLOB_TILDE, NULL, &glob_result);
+    if (return_value != 0) {
+        globfree(&glob_result);
+        stringstream ss;
+        ss << "glob() failed with return_value " << return_value << endl;
+        throw "+ " + ss.str(); //std::runtime_error(ss.str());
+    }
+
+    // collect all the filenames into a std::list<std::string>
+    list.clear();
+    for (size_t i = 0; i < glob_result.gl_pathc; ++i) {
+        list.push_back(string(glob_result.gl_pathv[i]));
+    }
+
+    // cleanup
+    globfree(&glob_result);
+}

@@ -1,11 +1,15 @@
 #include "texture.hpp"
+#include "constants.hpp"
+#include "pointer.hpp"
+
+using namespace std;
 
 Texture::Texture() {
-    renderer = NULL;
-    texture = NULL;
+    renderer = nullptr;
+    texture = nullptr;
     w = h = 0;
 }
-Texture::Texture(SDL_Renderer *&ren) {
+Texture::Texture(shared_ptr<SDL_Renderer> &ren) {
     renderer = ren;
     texture = NULL;
     w = h = 0;
@@ -16,11 +20,11 @@ Texture::~Texture() { Free(); }
 //
 //  Get rid of the existing texture
 void Texture::Free() {
-    if (texture) {
-        SDL_DestroyTexture(texture);
-        texture = NULL; 
-        w = h = 0;
-    }
+    // if (texture) {
+    //     SDL_DestroyTexture(texture);
+    //     texture = NULL; 
+    //     w = h = 0;
+    // }
 }
 
 //  Load texture from file
@@ -32,14 +36,19 @@ void Texture::Load(std::string path) {
     Free();
 
     //  Load an image from an specific path
-    SDL_Surface *loadedSurface = IMG_Load(path.c_str());
+    std::shared_ptr<SDL_Surface> loadedSurface = Pointer::createSdlSurface(
+        IMG_Load(path.c_str())
+    );
+
     if (!loadedSurface) throw IMG_GetError();
 
     //  Color key image
-    SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
+    SDL_SetColorKey(loadedSurface.get(), SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
 
     //  Create texture from surface pixels
-    texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+    texture = Pointer::createSdlTexture(
+        SDL_CreateTextureFromSurface(renderer.get(), loadedSurface.get())
+    );
     if (!texture) throw SDL_GetError();
 
     //  Get texture size
@@ -47,7 +56,7 @@ void Texture::Load(std::string path) {
     h = loadedSurface->h;
 
     //  Get rid of loaded surface
-    SDL_FreeSurface(loadedSurface);
+    // SDL_FreeSurface(loadedSurface);
 }   
 
 //  @brief
@@ -66,9 +75,9 @@ bool Texture::Move() { return true; }
 void Texture::Render(
     int x, int y,  
     SDL_RendererFlip flip,
-    SDL_Rect *clip, 
+    shared_ptr<SDL_Rect> clip, 
     double angle, 
-    SDL_Point *center
+    shared_ptr<SDL_Point> center
 ) {
     //  Set rendering space
     SDL_Rect renderQuad = { x, y, w, h, };
@@ -80,7 +89,7 @@ void Texture::Render(
     }
 
     //  Render to screen
-    SDL_RenderCopyEx(renderer, texture, clip, &renderQuad, angle, center, flip);
+    SDL_RenderCopyEx(renderer.get(), texture.get(), clip.get(), &renderQuad, angle, center.get(), flip);
 }
 
 int Texture::GetWidth() const { return w; }
