@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <iostream>
+#include <utility>  //  pair
 
 using namespace std;
 
@@ -19,14 +20,14 @@ shared_ptr<View> View::getInstance() {
 View::View():
     colorWhite({0xff, 0xff, 0xff, 0xff}) 
 { 
-    cerr << "Constructing view...\n";
+    //cerr << "Constructing view...\n";
 }
 
 View::~View() {
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
-    cerr << "Destructing view...\n";
+    //cerr << "Destructing view...\n";
 }
 
 void View::startSDL() {
@@ -48,6 +49,7 @@ void View::init() {
     initImage();
     initRenderer();
     initTextureText();
+    initTexture();
 }
 
 void View::initWindow() {
@@ -84,6 +86,37 @@ void View::initTextureText() {
         throw Exception(TTF_GetError());
 }
 
+void View::initTexture() {
+    std::vector<std::string> paths;
+
+    //  Add main background
+    paths.push_back("assets/images/background/background.png");
+
+    //  Add ground
+    paths.push_back("assets/images/ground/ground_01.png");
+
+    //  Add button
+    std::vector<std::string> sub;
+    Glob(sub, "assets/images/button/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
+    //  Add obstacles
+    Glob(sub, "assets/images/obstacle/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
+    //  Add stuff
+    Glob(sub, "assets/images/stuff/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
+    //  Add player
+    Glob(sub, "assets/images/player/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
+    //  Insert to map
+    for (auto path : paths)
+        storedTexture.insert(std::pair<std::string, std::shared_ptr<SDL_Texture>>(path, createTexture(path)));
+}
+
 shared_ptr<SDL_Surface> View::createSurface(const string &path) {
     SDL_Surface *_loadedSurface = IMG_Load(path.c_str());
     if (!_loadedSurface)
@@ -105,11 +138,15 @@ shared_ptr<SDL_Texture> View::createTexture(const string &path) {
 
 shared_ptr<SDL_Texture> View::createTextureText(const string &text, int fontSize, SDL_Rect *rect, bool isBold) {
     shared_ptr<TTF_Font> font;
-    string path = "assets/fonts/hind-";
-    path += (isBold ? "bold" : "medium");
-    path += ".ttf";
-    font = Pointer::createTtfFont(TTF_OpenFont(path.c_str(), fontSize));
-
+    if (isBold) {
+        font = Pointer::createTtfFont(
+            TTF_OpenFont("assets/fonts/hind-bold.ttf", fontSize)
+        );
+    } else {
+        font = Pointer::createTtfFont(
+            TTF_OpenFont("assets/fonts/hind-medium.ttf", fontSize)
+        );
+    }
     shared_ptr<SDL_Surface> surfaceMessage = Pointer::createSdlSurface(
         TTF_RenderText_Blended(font.get(), text.c_str(), colorWhite)
     );
@@ -121,17 +158,22 @@ shared_ptr<SDL_Texture> View::createTextureText(const string &text, int fontSize
 }
 
 void View::renderTexture(shared_ptr<Texture> obj) {
-    auto texture = createTexture(obj->path);
-    //if (obj->rect)
-    SDL_RenderCopyEx(
-        renderer.get(), 
-        texture.get(), 
-        nullptr, 
-        &(obj->rect), 
-        0.0, 
-        nullptr, 
-        obj->flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE
-    );
+    auto texture = storedTexture.find(obj->path)->second;
+    //  Only render textures on the screen
+    if (
+        obj->rect.x >= -Constants::MAX_LENGHT_OBSTACLE && 
+        obj->rect.x <= Constants::SCREEN_WIDTH+Constants::MAX_LENGHT_OBSTACLE
+    ) {
+        SDL_RenderCopyEx(
+            renderer.get(), 
+            texture.get(), 
+            nullptr, 
+            &(obj->rect), 
+            0.0, 
+            nullptr, 
+            obj->flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE
+        );
+    }
     //if (flag) SDL_RenderPresent(renderer.get());
 }
 

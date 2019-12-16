@@ -17,12 +17,12 @@ Sound::Sound():
     background(nullptr),
     diedScene(nullptr)
 {
-    cerr << "Constructing Sound...\n";
+    //cerr << "Constructing Sound...\n";
 }
 
 Sound::~Sound() {
     Mix_Quit();
-    cerr << "Destructing Sound...\n";
+    //cerr << "Destructing Sound...\n";
 }
 
 void Sound::initSound() {

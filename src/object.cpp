@@ -3,14 +3,15 @@
 using namespace std;
 
 Object::Object():
-    x(0), y(0), 
+    x(0), y(0), w(0), h(0),
     velocity({7, 0})
 {
 }
 
 Object::Object(string path, SDL_Rect rect, bool _flip):
-    x(0), y(0),
-    velocity({10, 0}),
+    x(rect.x), y(rect.y + rect.h-Constants::OBJECT_HEIGHT), 
+    w(rect.w), h(Constants::OBJECT_HEIGHT),
+    velocity({7, 0}),
     obj(new Texture(path, rect, _flip))
 {
 }
@@ -19,14 +20,30 @@ Object::~Object() {
 }
 
 SDL_Rect Object::getBox() const {
-    return SDL_Rect({
-        x, y + obj->rect.h - Constants::ROCK_HEIGHT,
-        obj->rect.w, Constants::ROCK_HEIGHT
-    });
+    return SDL_Rect({x, y, w, h});
 }
 
 shared_ptr<Texture> Object::getTexture() const {
     return obj;
+}
+
+void Object::setX(int _posX) {
+    obj->rect.x = x = _posX;
+}
+
+void Object::setY(int _posY) {
+    obj->rect.y = _posY;
+    y = _posY + (obj->rect.h - Constants::OBJECT_HEIGHT);
+}
+
+void Object::setW(int _w) {
+    w = _w;
+    x = obj->rect.x + (obj->rect.w - w)/2;
+}
+
+void Object::setH(int _h) {
+    h = _h;
+    y = obj->rect.y + (obj->rect.h - h);
 }
 
 bool Object::isCollision(std::shared_ptr<Object> &other) {
@@ -61,30 +78,23 @@ bool Object::isCollision(std::shared_ptr<Object> &other) {
     return true;
 }
 
-void Object::setX(int _posX) {
-    obj->rect.x = x = _posX;
-}
-
-void Object::setY(int _posY) {
-    obj->rect.y = y = _posY;
-}
-
 bool Object::Move(bool checkForward) {
     if (
-        (x <= 0 - obj->rect.w && checkForward) ||
-        (x >= Constants::SCREEN_WIDTH + obj->rect.w && !checkForward)
+        (obj->rect.x <= 0 - obj->rect.w && checkForward) ||
+        (obj->rect.x >= Constants::SCREEN_WIDTH + obj->rect.w && !checkForward)
     ) return false;
     else {
-        x += (checkForward ? -velocity[0] : velocity[0]);
-        obj->rect.x = x;
+        obj->rect.x += (checkForward ? -velocity[0] : velocity[0]);
+        x = obj->rect.x;
         return true;
     }
 }
 
-// Extra fucntions definition
-//
-// Load path of all files from `path` in system.
-// 
+void Object::setVel(SDL_Event &event) {}
+bool Object::canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) { return true; }
+
+
+//  ------------------------------
 void Glob(vector<string> &list, string path) {
     // glob struct resides on the stack
     glob_t glob_result;

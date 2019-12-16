@@ -21,11 +21,11 @@ Screen::Screen():
     screenType(),
     nextScreenType()
 {
-    cerr << "Constructing Screen...\n";
+    //cerr << "Constructing Screen...\n";
 }
 
 Screen::~Screen() {
-    cerr << "Destructing Screen...\n";
+    //cerr << "Destructing Screen...\n";
 }
 
 shared_ptr<Screen> Screen::createScreenFromScreenType(ScreenType screenType) {

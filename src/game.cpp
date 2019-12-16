@@ -30,24 +30,24 @@ Game::Game():
     event(),
     keystate() 
 {
-    cerr << "Constructing Game...\n";
+    //cerr << "Constructing Game...\n";
 }
 
 Game::~Game() {
-    cerr << "Destructing Game...\n";
+    //cerr << "Destructing Game...\n";
 }
 
 void Game::start() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         throw Exception(SDL_GetError());
     }
-    cerr << "Start game...\n";
+    //cerr << "Start game...\n";
     init();
     loop();
 }
 
 void Game::init() {
-    cerr << "  Game initalization..\n";
+    //cerr << "  Game initalization..\n";
     view->startSDL();
     sound->initSound();
     
@@ -58,7 +58,7 @@ void Game::init() {
 }
 
 void Game::loop() {
-    cerr << "  Game loop...\n";
+    //cerr << "  Game loop...\n";
     keystate = SDL_GetKeyboardState(NULL);
 
     using FrameDuration = std::chrono::duration<int, ratio<1, 60>>;
@@ -75,10 +75,10 @@ void Game::loop() {
             ScreenType nextScreenType = screens.back()->loop(event);
             if (nextScreenType != screens.back()->getType()) {
                 if (nextScreenType == BACK_TO_PREV) {
-                    cerr << "Back to previous screen!\n";
+                    //cerr << "Back to previous screen!\n";
                     backToPreScr();
                 } else if (nextScreenType != QUIT) {
-                    cerr << "Switch to next screen.\n";
+                    //cerr << "Switch to next screen.\n";
                     switchToNextScr(nextScreenType);
                 } else {
                     running = false;

@@ -65,8 +65,7 @@ class View {
         void initTexture();
 
         //  Create a map of path vs SDL_Texture
-        //std::map<std::string, SDL_Texture> storedTexture;
-        //std::map<std::string, std::shared_ptr<SDL_Texture>> path;
+        std::map<std::string, std::shared_ptr<SDL_Texture>> storedTexture;
 
         // create an SDL_Surface from path and wrap it in shared_ptr
         std::shared_ptr<SDL_Surface> createSurface(const std::string &path);

@@ -89,6 +89,8 @@ class Object {
         
         void setX(int _posX);
         void setY(int _posY);
+        void setW(int _w);
+        void setH(int _h);
 
         //  @brief
         //  Check whether object collides other object or not
@@ -108,12 +110,19 @@ class Object {
         //  False if object goes further than 0 x-coordinate and true otherwise
         bool Move(bool checkForward);
 
+        //  Function for polymorphism in Player class
+        virtual void setVel(SDL_Event &event);
+        //  Function for polymorphism in Player class
+        virtual bool canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
+
     protected:
         std::vector<int> velocity; // 0/1: X/Y velocity
 
-        int x, y;
+        int x, y, w, h;
         std::shared_ptr<Texture> obj;
 };
+
+//  ------------------------------
 
 
 // Extra fucntions definition

@@ -51,8 +51,8 @@ shared_ptr<Controller> Controller::getInstance() {
 Controller::Controller(int level)
 {   
     srand(time(NULL));
-    cerr << "Constructing controller...\n";
-    Glob(obstaclePath, "assets/images/obstacle/vehicle/*");
+    //cerr << "Constructing controller...\n";
+    Glob(obstaclePath, "assets/images/obstacle/*");
     Glob(stuffPath, "assets/images/stuff/*");
 
     //  Initialize obstacles
@@ -63,11 +63,9 @@ Controller::Controller(int level)
         for (int i = 0; i < maxObstacle; ++i) {
             //  Random new type for new object
             int type = rand() % this->obstaclePath.size();
-            //cerr << "  Generate type of temp object done!\n";
             shared_ptr<Object> temp(new Object(
                 obstaclePath[type], getRect(obstaclePath[type], 0, posY[index]), (index % 4) > 1
             ));
-            //cerr << "  Generate temp object done!\n";
 
             //  Random x-coordinate and check overlap with other objects' position
             do { 
@@ -80,7 +78,6 @@ Controller::Controller(int level)
         }
         index++;
     }
-    cerr << "Generate obstacle done!\n";
 
     //  Initialize stuffs
     index = 0;
@@ -112,65 +109,55 @@ Controller::Controller(int level)
                 temp->setY(posY);
             } while (CheckOverlap(curb, temp));
 
-            //temp->SetW(Constants::OBJECT_HEIGHT);
-            //temp->SetH(Constants::STUFF_WIDTH);
+            temp->setW(Constants::STUFF_WIDTH);
+            temp->setH(Constants::ROCK_HEIGHT);
             curb.push_back(temp);
         }
         index++;
     }
-    cerr << "Constructing controller done!\n";
+
+    //  Initializer player
+    string pathPlayer = "assets/images/player/player_01.png";
+    player = make_shared<Player>(
+        pathPlayer, getRect(pathPlayer, Constants::SCREEN_WIDTH/2, 0)
+    );
+    while (CheckOverlap(stuff[0], player)) {
+        int posX = rand() % (Constants::SCREEN_WIDTH);
+        if (posX > Constants::SCREEN_WIDTH - player->getTexture()->rect.x) posX -= player->getTexture()->rect.x;
+        player->setX(posX);
+    }
+    player->setW(Constants::STUFF_WIDTH);
+
+    //cerr << "Constructing controller done!\n";
 }
 
 Controller::~Controller() {
-    cerr << "Destructing controller...\n";
+    //cerr << "Destructing controller...\n";
 }
 
-void Controller::moveUp() {
-    
-}
-
-void Controller::moveDown() {
-
-}
-
-void Controller::moveLeft() {
-
-}
-
-void Controller::moveRight() {
-
-}
-
-void Controller::clearAll() {
-
-}
-
-bool Controller::collision() {
-    return 0;
+void Controller::handlePlayer(SDL_Event &event) {
+    player->setVel(event);
+    player->canMove(stuff);
 }
 
 void Controller::updateObstacle(int level) {
-    //cerr << "Start update..\n";
-    // int index = 0;
-    // for (auto &lane : obstacles) {
-    //     for (int i = 0; i < (int) lane.size(); ++i) {
-    //         if (!lane[i]->Move((index % 4) < 2)) {
-    //             cerr << "Ali\n";
-    //             int type = rand() % this->obstaclePath.size();
-    //             lane[i] = make_shared<Object>(
-    //                 obstaclePath[type], getRect(obstaclePath[type], 0, posY[index]), (index % 4) > 1
-    //             );
-    //             do {
-    //                 int pos = rand() % ((6 - level)*Constants::SCREEN_WIDTH/2);
-    //                 pos = ((index % 4) > 1 ? -pos : pos + Constants::SCREEN_WIDTH);
-    //                 lane[i]->setX(pos);
-    //             } while (CheckOverlap(lane, lane[i]));
-    //         }
-    //     }
-    //     index++;
-    // }
-    
-    //cerr << "Update done\n";
+    int index = 0;
+    for (auto &lane : obstacles) {
+        for (int i = 0; i < (int) lane.size(); ++i) {
+            if (!lane[i]->Move((index % 4) < 2)) {
+                int type = rand() % this->obstaclePath.size();
+                lane[i] = make_shared<Object>(
+                    obstaclePath[type], getRect(obstaclePath[type], 0, posY[index]), (index % 4) > 1
+                );
+                do {
+                    int pos = rand() % ((6 - level)*Constants::SCREEN_WIDTH/2);
+                    pos = ((index % 4) > 1 ? -pos : pos + Constants::SCREEN_WIDTH);
+                    lane[i]->setX(pos);
+                } while (CheckOverlap(lane, lane[i]));
+            }
+        }
+        index++;
+    }
 }
 
 std::vector<std::shared_ptr<Texture>> Controller::getObstacles() {
@@ -185,4 +172,8 @@ std::vector<std::shared_ptr<Texture>> Controller::getStuff() {
     for (auto lane : stuff)
         for (auto it : lane) res.push_back(it->getTexture());
     return res;
+}
+
+std::shared_ptr<Texture> Controller::getPlayer() {
+    return player->getTexture();
 }

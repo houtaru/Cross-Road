@@ -13,25 +13,31 @@ class Controller {
         Controller(int level=1);
         virtual ~Controller();
 
-        // main functions
-        void moveUp();
-        void moveDown();
-        void moveLeft();
-        void moveRight();
-        void clearAll();
-        bool collision();
-
-        // Data manipulations
+        //  Data manipulations
         // void saveData();
         // void loadData();
 
+        //  @brief
+        //  Handle player character according to inputed events
+        //
+        //  @param
+        //  event: The event inputed by the player
+        void handlePlayer(SDL_Event &event);
+
+        //  @brief
+        //  Update position of all obstacles
+        //
+        //  @param
+        //  level: The current level of game
         void updateObstacle(int level);
+
+        //  @brief
+        //  Check collision of player
+        bool checkCollision();
 
         std::vector<std::shared_ptr<Texture>> getObstacles();
         std::vector<std::shared_ptr<Texture>> getStuff();
-
-        // concurrence
-        // bool checkCollision(); 
+        std::shared_ptr<Texture> getPlayer();
 
     private:
         static std::shared_ptr<Controller> instance;
@@ -39,11 +45,15 @@ class Controller {
         static const std::vector<int> posY;
         static const std::vector<std::pair<int, int>> posYcurb;
 
-        std::shared_ptr<Player> player;
+        std::shared_ptr<Object> player;
 
+        //  Path to folder containing images of obstacles
         std::vector<std::string> obstaclePath;
+        //  Path to folder containing images of stuffs
         std::vector<std::string> stuffPath;
 
-        std::vector<std::vector<std::shared_ptr<Object>>> obstacles; // car, truck, dinosaur, bird
-        std::vector<std::vector<std::shared_ptr<Object>>> stuff; // rock, tree
+        //  car, truck, dinosaur, bird
+        std::vector<std::vector<std::shared_ptr<Object>>> obstacles;
+        //  rock, tree
+        std::vector<std::vector<std::shared_ptr<Object>>> stuff;
 };
