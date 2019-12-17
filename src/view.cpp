@@ -88,15 +88,16 @@ void View::InitTextureText() {
 
 void View::InitTexture() {
     std::vector<std::string> paths;
-
-    //  Add main background
-    paths.push_back("assets/images/background/background.png");
+    std::vector<std::string> sub;
 
     //  Add ground
     paths.push_back("assets/images/ground/ground_01.png");
 
+    //  Add background
+    Glob(sub, "assets/images/background/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
     //  Add button
-    std::vector<std::string> sub;
     Glob(sub, "assets/images/button/*");
     paths.insert(paths.end(), sub.begin(), sub.end());
 

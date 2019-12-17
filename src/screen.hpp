@@ -10,11 +10,12 @@ enum ScreenType {
     BACK_TO_PREV = -1,
     MAIN = 0,
     PLAY = 1,
-    HIGHSCORE = 2,
-    SETTING = 3,
-    QUIT = 4,
-    PAUSE = 5,
-    ENDGAME = 6
+    LOAD = 2,
+    HIGHSCORE = 3,
+    SETTING = 4,
+    QUIT = 5,
+    PAUSE = 6,
+    SAVE = 7
 };
 
 class Screen {
@@ -38,6 +39,7 @@ class Screen {
         virtual void Start();
         virtual void Redraw();
         virtual ScreenType Loop(SDL_Event &event);
+        virtual void Save();
 
         ScreenType GetType();
 

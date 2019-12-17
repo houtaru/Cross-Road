@@ -5,6 +5,7 @@
 #include <iostream>
 #include <glob.h>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -151,13 +152,104 @@ Controller::Controller(int level)
     //cerr << "Constructing controller done!\n";
 }
 
+void LoadObject(ifstream &os, std::shared_ptr<Object> &object) {
+    //  Read path to object
+    std::string path;
+    os.ignore(1000, '\n');
+    os >> path;
+    //  Read bounding box
+    SDL_Rect boundingBox;
+    os >> boundingBox.x >> boundingBox.y >> boundingBox.w >> boundingBox.h;
+    //  Read SDL_Rect
+    SDL_Rect _rect;
+    os >> _rect.x >> _rect.y >> _rect.w >> _rect.h;
+    //  Read flip
+    int flip;
+    os >> flip;
+
+    object = make_shared<Object>(path, _rect, flip != 0);
+    // object->SetX(boundingBox.x);
+    // object->SetW(boundingBox.w);
+    // object->SetY(boundingBox.y);
+    // object->SetH(boundingBox.h);
+}
+
+Controller::Controller(bool load, int &level, int &finalScore) {
+    srand(time(NULL));
+    //cerr << "Constructing controller...\n";
+    Glob(obstaclePath, "assets/images/obstacle/*");
+    Glob(stuffPath, "assets/images/stuff/*");
+
+    ifstream fin("data/save.txt");
+
+    fin >> level >> finalScore;
+
+    //  Load player
+    LoadObject(fin, player);
+
+    //  Load obstacles
+    int index = 0;
+    //  There are 8 lanes
+    obstacles.resize(8);
+    for (auto &lane : obstacles) {
+        int size;
+        fin >> size;
+        for (int i = 0; i < size; ++i) {
+            std::shared_ptr<Object> temp;
+            LoadObject(fin, temp);
+            lane.push_back(temp);
+        }
+        ++index;
+    }
+
+    //  Load stuff
+    index = 0;
+    //  There are 3 curbs
+    stuff.resize(3);
+    for (auto &lane : stuff) {
+        int size;
+        fin >> size;
+        for (int i = 0; i < size; ++i) {
+            std::shared_ptr<Object> temp;
+            LoadObject(fin, temp);
+            lane.push_back(temp);
+        }
+    }
+
+    // Load 3 parts of light
+    for (int i = 0 ; i < 3; ++i) {
+        SDL_Rect temp;
+        fin >> temp.x >> temp.y >> temp.w >> temp.h;
+        lightParts.push_back(temp);
+    }
+
+    //  Load sign of the lights
+    for (int i = 0; i < 4; ++i) {
+        int temp;
+        fin >> temp;
+        lightSigns.push_back(static_cast<SignLight>(temp));
+
+        //  Set times for the lights
+        lightTimes.push_back(SDL_GetTicks());
+    }
+    //  Set part for the lights
+    stuff[0][0]->SetRectPart(lightParts[lightSigns[0]]);
+    stuff[1][0]->SetRectPart(lightParts[lightSigns[1]]);
+    stuff[1][1]->SetRectPart(lightParts[lightSigns[2]]);
+    stuff[2][0]->SetRectPart(lightParts[lightSigns[3]]);
+
+    fin.close();
+    //cerr << "Constructing controller done!\n";
+}
+
 Controller::~Controller() {
     //cerr << "Destructing controller...\n";
 }
 
 bool Controller::HandlePlayer(SDL_Event &event) {
-    while (SDL_PollEvent(&event) != 0)
+    while (SDL_PollEvent(&event) != 0) {
         player->SetVel(event);
+    }
     player->CanMove(stuff);
 
     //  If player finishes the current level, return true
@@ -216,6 +308,53 @@ void Controller::Update(int level) {
         }
         ++index;
     }
+}
+
+void SaveObject(ofstream &os, std::shared_ptr<Object> object) {
+    //  Write path to object
+    os << object->GetTexture()->path << endl;
+    //  Write bounding box
+    std::vector<int> boundingBox = object->GetBoundingBox();
+    os << boundingBox[0] << " " << boundingBox[1] << " " << boundingBox[2] << " " << boundingBox[3] << endl;
+    //  Write SDL_Rect
+    SDL_Rect _rect = object->GetTexture()->rect;
+    os << _rect.x << " " << _rect.y << " " << _rect.w << " " << _rect.h << endl; 
+    //  Write flip
+    os << object->GetTexture()->flip << endl;
+}
+
+void Controller::Save(int level, int finalScore) {
+    //cerr << "Saving..\n";
+    ofstream fout("data/save.txt");
+
+    fout << level << " " << finalScore << endl;
+
+    //  Write info of player
+    SaveObject(fout, player);
+
+    //  Write info of obstacles
+    for (auto lane : obstacles) {
+        fout << lane.size() << endl;
+        for (int i = 0; i < lane.size(); ++i)
+            SaveObject(fout, lane[i]);
+    }
+
+    //  Write info of stuffs
+    for (auto lane : stuff) {
+        fout << lane.size() << endl;
+        for (int i = 0; i < lane.size(); ++i)
+            SaveObject(fout, lane[i]);
+    }
+    
+    //  Write 3 parts of light
+    for (auto part : lightParts)
+        fout << part.x << " " << part.y << " " << part.w << " " << part.h << endl;
+
+    //  Write time of lights
+    for (auto sign : lightSigns)
+        fout << sign << " ";
+
+    fout.close();
 }
 
 bool Controller::CheckCollision() {

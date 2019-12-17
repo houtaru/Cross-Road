@@ -27,6 +27,8 @@ class Game {
 		static const int SDL_DELAY_PER_FRAME;
 
 		bool running;
+		//	Control if player presses save or not
+		bool save;
 		SDL_Event event;
 		const Uint8 *keystate;
 		std::vector<std::shared_ptr<Screen>> screens;

@@ -27,6 +27,7 @@ shared_ptr<Game> Game::GetInstance() {
 
 Game::Game():
     running(false),
+    save(false),
     screens(),
     event(),
     keystate() 
@@ -74,17 +75,21 @@ void Game::Loop() {
 
             ScreenType nextScreenType = screens.back()->Loop(event);
             if (nextScreenType != screens.back()->GetType()) {
-                if (nextScreenType == BACK_TO_PREV) {
-                    //cerr << "Back to previous screen!\n";
+                if (nextScreenType == SAVE) {
+                    screens[screens.size()-2]->Save();
+                } else if (nextScreenType == BACK_TO_PREV) {
+                    cerr << "Back to previous screen!\n";
                     BackToPreScr();
                 } else if (nextScreenType != QUIT) {
-                    //cerr << "Switch to next screen.\n";
+                    cerr << "Switch to next screen.\n";
                     SwitchToNextScr(nextScreenType);
                 } else {
                     running = false;
                 }
             }
-            SDL_PumpEvents();
+            //SDL_PumpEvents();
+            //SDL_FlushEvent(SDL_MOUSEBUTTONUP);
+            //SDL_FlushEvent(SDL_MOUSEBUTTONDOWN);
         } while (SDL_PollEvent(&event) != 0 && running);
 
         screens.back()->Redraw();

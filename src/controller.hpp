@@ -11,6 +11,7 @@ enum SignLight { RED, YELLOW, GREEN };
 class Controller {
     public:
         Controller(int level=1);
+        Controller(bool load, int &level, int &finalScore);
         virtual ~Controller();
 
         //  Data manipulations
@@ -33,6 +34,14 @@ class Controller {
         //  @param
         //  level: The current level of game
         void Update(int level);
+
+        //  @brief
+        //  Save data to file
+        //  
+        //  @param
+        //  level: The current level of game
+        //  finalScore: The current score
+        void Save(int level, int finalScore);
 
         //  @brief
         //  Check collision of player

@@ -3,6 +3,7 @@
 #include "screenMain.hpp"
 #include "screenPlay.hpp"
 #include "screenScore.hpp"
+#include "screenPause.hpp"
 
 #include <iostream>
 
@@ -36,14 +37,14 @@ shared_ptr<Screen> Screen::CreateScreenFromScreenType(ScreenType screenType) {
         case PLAY:
             return shared_ptr<Screen>((Screen*) new ScreenPlay());
             break;
+        case LOAD:
+            return shared_ptr<Screen>((Screen*) new ScreenPlay(false));
+            break;
         case HIGHSCORE:
             return shared_ptr<Screen>((Screen*) new ScreenScore());
             break;
         case PAUSE:
-            // return shared_ptr<Screen>((Screen*) new PauseScreen());
-            break;
-        case ENDGAME:
-            // return shared_ptr<Screen>((Screen*) new BeforeEndScreen());
+            return shared_ptr<Screen>((Screen*) new ScreenPause());
             break;
         default:
             throw "No such Screen!\n";
@@ -98,6 +99,8 @@ ScreenType Screen::Loop(SDL_Event &event) {
     }
     return nextScreenType;
 }
+
+void Screen::Save() {}
 
 ScreenType Screen::GetType() {
     return screenType;

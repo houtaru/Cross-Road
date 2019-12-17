@@ -8,13 +8,13 @@
 class ScreenPlay: public Screen {
     typedef void (ScreenPlay::*FunctionPointer)();
     public:
-        ScreenPlay();
+        ScreenPlay(bool newGame=true);
         virtual ~ScreenPlay();
 
         virtual void Start();
         virtual void Redraw();
         virtual ScreenType Loop(SDL_Event &event);
-    
+        void Save();
         int NormalScore(int time, int level);
     
     private:
@@ -25,7 +25,6 @@ class ScreenPlay: public Screen {
         static const SDL_Rect RECT_LEVEL;
         static const SDL_Rect RECT_SCORE;
     
-        bool newGame;
         int level;
         int startTime;
         int finalScore;

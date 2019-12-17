@@ -12,18 +12,22 @@ using namespace std;
 const SDL_Rect ScreenPlay::RECT_LEVEL = { 1150, 0, 350, 150};
 const SDL_Rect ScreenPlay::RECT_SCORE = { 1400, 0, 350, 150};
 
-ScreenPlay::ScreenPlay():
-    newGame(true), level(1), startTime(0), finalScore(0)
+ScreenPlay::ScreenPlay(bool newGame) :
+    level(1), startTime(0), finalScore(0)
 {
     background = make_shared<Texture>(
         "assets/images/ground/ground_01.png",
         RECT_BACKGROUND
     );
-    controller = make_shared<Controller>(level);
+    
+    if (newGame) 
+        controller = make_shared<Controller>(level);
+    else 
+        controller = make_shared<Controller>(true, level, finalScore);
 
     string s = "LEVEL " + to_string(level);
     fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
-    s = "SCORE " + to_string(0);
+    s = "SCORE " + to_string(finalScore);
     fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
 
     //cerr << "Constructing Screen Play....\n";
@@ -52,6 +56,10 @@ ScreenPlay::~ScreenPlay() {
 
 void ScreenPlay::Start() {
     screenType = nextScreenType = PLAY;
+    view->RenderClear();
+    ClearButton();
+    SetButtonDefault(background, nullptr);
+
     view->RenderTexture(background);
     startTime = SDL_GetTicks();
 }
@@ -64,29 +72,34 @@ ScreenType ScreenPlay::Loop(SDL_Event &event) {
     if (screenType != nextScreenType) {
         return nextScreenType;
     }
-
     if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-        //  If player finishes the current level
-        if (controller->HandlePlayer(event)) {
-            finalScore += NormalScore(SDL_GetTicks() - startTime, level);
-            ++level;
-            
-            //  Game just has 5 levels. If complete all of them, CONGRATULATION, YOU WIN
-            if (level > 5) {
-                cerr << "You win!\n";
-                return BACK_TO_PREV;
-            }
-            
-            //  Update score and level display
-            string s = "LEVEL " + to_string(level);
-            fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
-            s = "SCORE " + to_string(finalScore);
-            fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
-            
-            //  Reset controller for new level
-            controller = make_shared<Controller>(level);
-            //  Start again
-            Start();
+        int eventKey = event.key.keysym.sym;
+        switch (eventKey) {
+            case SDLK_ESCAPE:
+                return nextScreenType = PAUSE;
+            default:
+                //  If player finishes the current level
+                if (controller->HandlePlayer(event)) {
+                    finalScore += NormalScore(SDL_GetTicks() - startTime, level);
+                    ++level;
+                    
+                    //  Game just has 5 levels. If complete all of them, CONGRATULATION, YOU WIN
+                    if (level > 5) {
+                        cerr << "You win!\n";
+                        return BACK_TO_PREV;
+                    }
+                    
+                    //  Update score and level display
+                    string s = "LEVEL " + to_string(level);
+                    fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
+                    s = "SCORE " + to_string(finalScore);
+                    fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
+                    
+                    //  Reset controller for new level
+                    controller = make_shared<Controller>(level);
+                    //  Start again
+                    Start();
+                }
         }
     }
 
@@ -102,6 +115,10 @@ int ScreenPlay::NormalScore(int time, int level) {
         return level*1000 - time/50;
     else
         return 0;
+}
+
+void ScreenPlay::Save() {
+    controller->Save(level, finalScore);
 }
 
 void ScreenPlay::UpdateViewGround() {

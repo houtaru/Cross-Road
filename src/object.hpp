@@ -88,6 +88,7 @@ class Object {
         SDL_Rect GetBox() const;
 
         std::shared_ptr<Texture> GetTexture() const;
+        std::vector<int> GetBoundingBox() const;
         
         void SetX(int _posX);
         void SetY(int _posY);

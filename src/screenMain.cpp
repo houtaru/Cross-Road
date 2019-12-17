@@ -66,10 +66,12 @@ ScreenMain::~ScreenMain() {
 
 void ScreenMain::Start() {
     screenType = nextScreenType = MAIN;
-    view->RenderTexture(background);
 
+    view->RenderClear();
     ClearButton();
     SetButtonDefault(background, nullptr);
+
+    view->RenderTexture(background);
     
     // start button
     function<void()> buttonStartCallBack = bind(
@@ -119,7 +121,7 @@ void ScreenMain::OnClickButtonStart() {
 }
 
 void ScreenMain::OnClickButtonLoadGame() {
-    nextScreenType = PLAY;
+    nextScreenType = LOAD;
 }
 
 void ScreenMain::OnClickButtonHighscore() {

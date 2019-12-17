@@ -19,6 +19,14 @@ Object::~Object() {}
 SDL_Rect Object::GetBox() const { return SDL_Rect({x, y, w, h}); }
 
 shared_ptr<Texture> Object::GetTexture() const { return obj; }
+std::vector<int> Object::GetBoundingBox() const {
+    std::vector<int> res;
+    res.push_back(x);
+    res.push_back(y);
+    res.push_back(w);
+    res.push_back(h);
+    return res;
+}
 
 void Object::SetX(int _posX) {
     obj->rect.x = x = _posX;

@@ -18,9 +18,20 @@ ScreenScore::ScreenScore()
 {
     //cerr << "Constructing Screen Score..\n";
     background= make_shared<Texture>(
-        "assets/images/background/backgound_highscore.png",
+        "assets/images/background/background_highscore.png",
         RECT_BACKGROUND
     );
+}
+ScreenScore::~ScreenScore() {
+    //cerr << "Destructing screen score..\n";
+}
+
+void ScreenScore::Start() {
+    screenType = nextScreenType = HIGHSCORE;
+
+    view->RenderClear();
+    ClearButton();
+    SetButtonDefault(background, nullptr);
     
     fontHighScore = make_shared<FontObject>(
         "HIGH SCORE", 80, RECT_HIGHSCORE 
@@ -43,30 +54,25 @@ ScreenScore::ScreenScore()
         this
     );
     AddButton(buttonBack, buttonStartCallBack);
-}
-ScreenScore::~ScreenScore() {
-    //cerr << "Destructing screen score..\n";
-}
 
-void ScreenScore::Start() {
-    screenType = nextScreenType = HIGHSCORE;
-    view->RenderTexture(background);
-    view->RenderFontObject(fontHighScore, 1) ;
     for (int i = 0; i < 5; i++) {
         string s = to_string(score[i]);  
         temp  = make_shared<FontObject>(s, 30 , Rect[i]);
         fontScore.push_back(temp);
     }
-    view->RenderFontObject(fontScore, 1) ;
+    view->RenderTexture(background);
+    view->RenderFontObject(fontHighScore, 1);
+    view->RenderFontObject(fontScore, 1);
 }
 
-void ScreenScore::Redraw() {}
+void ScreenScore::Redraw() {
+}
 
 ScreenType ScreenScore::Loop(SDL_Event &event) {
     if (screenType != nextScreenType) {
         return nextScreenType;
     }
-    Screen::Loop(event) ; 
+    Screen::Loop(event); 
     return nextScreenType;
 }
 void ScreenScore::OnclickButtonBack(){
