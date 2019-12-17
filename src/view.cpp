@@ -108,6 +108,10 @@ void View::initTexture() {
     Glob(sub, "assets/images/stuff/*");
     paths.insert(paths.end(), sub.begin(), sub.end());
 
+    //  Add light
+    Glob(sub, "assets/images/light/*");
+    paths.insert(paths.end(), sub.begin(), sub.end());
+
     //  Add player
     Glob(sub, "assets/images/player/*");
     paths.insert(paths.end(), sub.begin(), sub.end());
@@ -167,7 +171,7 @@ void View::renderTexture(shared_ptr<Texture> obj) {
         SDL_RenderCopyEx(
             renderer.get(), 
             texture.get(), 
-            nullptr, 
+            (obj->rect_part.x == 0 && obj->rect_part.y == 0 && obj->rect_part.w == 0 && obj->rect_part.h == 0) ? nullptr : &(obj->rect_part), 
             &(obj->rect), 
             0.0, 
             nullptr, 

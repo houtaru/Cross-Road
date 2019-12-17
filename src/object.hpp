@@ -29,8 +29,10 @@
 struct Texture {
     std::string path;
     SDL_Rect rect;
+    SDL_Rect rect_part;
     bool flip;
-    Texture(std::string _path, const SDL_Rect &_rect, bool _flip = false): path(_path), rect(_rect), flip(_flip) {}
+    Texture(std::string _path, const SDL_Rect &_rect, bool _flip=false, const SDL_Rect &_rect_part={0, 0, 0, 0}): 
+        path(_path), rect(_rect), flip(_flip), rect_part(_rect_part) {}
 };
 
 // A rectangle object contains a single color that can be render to screen.
@@ -80,7 +82,7 @@ struct Button {
 class Object {
     public:
         Object();
-        Object(std::string path, SDL_Rect rect, bool _flip = false);
+        Object(std::string path, SDL_Rect rect, bool _flip=false, SDL_Rect rect_part={0, 0, 0, 0});
         virtual ~Object();
 
         SDL_Rect getBox() const;
@@ -91,6 +93,10 @@ class Object {
         void setY(int _posY);
         void setW(int _w);
         void setH(int _h);
+        
+        //  @brief
+        //  Set rectangle for rendering a part of texture
+        void setRectPart(SDL_Rect _rect_part);
 
         //  @brief
         //  Check whether object collides other object or not
@@ -113,7 +119,7 @@ class Object {
         //  Function for polymorphism in Player class
         virtual void setVel(SDL_Event &event);
         //  Function for polymorphism in Player class
-        virtual bool canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
+        virtual void canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
 
     protected:
         std::vector<int> velocity; // 0/1: X/Y velocity
@@ -125,8 +131,13 @@ class Object {
 //  ------------------------------
 
 
-// Extra fucntions definition
+//  @brief
+//  Function like glob.glob() in Python
+//  
+//  @param
+//  list: vector of string you want to save paths into
+//  path: The path to specific folder
 //
-// Load path of all files from `path` in system.
-// 
+//  @source
+//  https://stackoverflow.com/questions/8401777/simple-glob-in-c-on-unix-system
 void Glob(std::vector<std::string> &list, std::string path);

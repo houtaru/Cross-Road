@@ -12,9 +12,12 @@ namespace Constants {
 
     extern const int MAX_LENGHT_OBSTACLE;
     extern const int OBJECT_HEIGHT;
-    
-
     extern const int ROCK_HEIGHT;
+    extern const int VEHICLE_HEIGHT;
+
+    extern const int RED_DURATION;
+    extern const int YELLOW_DURATION;
+    extern const int GREEN_DURATION;
     
     extern const char* const GAME_TITLE;
 }

@@ -28,7 +28,7 @@ void Player::setVel(SDL_Event &event) {
     }
 }
 
-bool Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
+void Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
     //  Move the player left or right
     obj->rect.x += velX;
     x = obj->rect.x;
@@ -54,6 +54,4 @@ bool Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
                 obj->rect.y -= velY;
             }
     }
-
-    return true;
 }

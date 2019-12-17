@@ -5,27 +5,20 @@ using namespace std;
 Object::Object():
     x(0), y(0), w(0), h(0),
     velocity({7, 0})
-{
-}
+{}
 
-Object::Object(string path, SDL_Rect rect, bool _flip):
+Object::Object(string path, SDL_Rect rect, bool _flip, SDL_Rect rect_part):
     x(rect.x), y(rect.y + rect.h-Constants::OBJECT_HEIGHT), 
     w(rect.w), h(Constants::OBJECT_HEIGHT),
     velocity({7, 0}),
-    obj(new Texture(path, rect, _flip))
-{
-}
+    obj(new Texture(path, rect, _flip, rect_part))
+{}
 
-Object::~Object() {
-}
+Object::~Object() {}
 
-SDL_Rect Object::getBox() const {
-    return SDL_Rect({x, y, w, h});
-}
+SDL_Rect Object::getBox() const { return SDL_Rect({x, y, w, h}); }
 
-shared_ptr<Texture> Object::getTexture() const {
-    return obj;
-}
+shared_ptr<Texture> Object::getTexture() const { return obj; }
 
 void Object::setX(int _posX) {
     obj->rect.x = x = _posX;
@@ -44,6 +37,10 @@ void Object::setW(int _w) {
 void Object::setH(int _h) {
     h = _h;
     y = obj->rect.y + (obj->rect.h - h);
+}
+
+void Object::setRectPart(SDL_Rect _rect_part) {
+    obj->rect_part = _rect_part;
 }
 
 bool Object::isCollision(std::shared_ptr<Object> &other) {
@@ -91,7 +88,7 @@ bool Object::Move(bool checkForward) {
 }
 
 void Object::setVel(SDL_Event &event) {}
-bool Object::canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) { return true; }
+void Object::canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) {}
 
 
 //  ------------------------------

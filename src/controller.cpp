@@ -43,9 +43,11 @@ Controller::Controller(int level)
     //cerr << "Constructing controller...\n";
     Glob(obstaclePath, "assets/images/obstacle/*");
     Glob(stuffPath, "assets/images/stuff/*");
+    lightPath = "assets/images/light/light_01.png";
 
     //  Initialize obstacles
     int index = 0;
+    //  There are 8 lanes
     obstacles.resize(8);
     int maxObstacle = Constants::SCREEN_WIDTH / Constants::MAX_LENGHT_OBSTACLE;
     for (auto &lane : obstacles) {
@@ -68,9 +70,38 @@ Controller::Controller(int level)
         index++;
     }
 
-    //  Initialize stuffs
-    index = 0;
+    //  Initialize parts of light and lights
+    //  There are 3 curbs
     stuff.resize(3);
+    for (int i = 0; i < 3; ++i) {
+        lightParts.push_back(getRect(lightPath));
+        lightParts.back().w /= 3;
+        lightParts.back().x = i * lightParts.back().w;
+    }
+    //  Destination rectangle just has one-third of the original width
+    SDL_Rect sub = getRect(lightPath);
+    sub.w /= 3;
+    for (int i = 0; i < 4; ++i) {
+        lightSigns.push_back(static_cast<SignLight>(rand() % 3));
+        lightTimes.push_back(SDL_GetTicks());
+        shared_ptr<Object> temp(new Object(
+            lightPath, sub, false, lightParts[lightSigns[i]]
+        ));
+
+        temp->setW(Constants::STUFF_WIDTH);
+        temp->setX(i % 2 == 0 ? 5 : (Constants::SCREEN_WIDTH - temp->getTexture()->rect.w - 5));
+        temp->setY(i % 2 == 0 ? (posY[(i/2)*4] - temp->getTexture()->rect.h - 10) : (posY[(i/2)*4 + 3] + Constants::VEHICLE_HEIGHT/2) - 15);
+        temp->setH(Constants::ROCK_HEIGHT);
+
+        if (i < 2) 
+            stuff[i].push_back(temp);
+        else 
+            stuff[i-1].push_back(temp);
+    }
+
+
+    //  Initialize other stuffs
+    index = 0;
     for (auto &curb : stuff) {
         int maxStuff;
         do {
@@ -135,8 +166,35 @@ bool Controller::handlePlayer(SDL_Event &event) {
 }
 
 void Controller::updateObstacle(int level) {
+    //  Update lights
+    for (int i = 0; i < 4; ++i) {
+        unsigned int now = SDL_GetTicks();
+        if (
+            (lightSigns[i] == RED && (now - lightTimes[i] > Constants::RED_DURATION)) ||
+            (lightSigns[i] == YELLOW && (now - lightTimes[i] > Constants::YELLOW_DURATION)) ||
+            (lightSigns[i] == GREEN && (now - lightTimes[i] > Constants::GREEN_DURATION))
+        ) {
+            //  Set to next sign
+            lightSigns[i] = static_cast<SignLight>((lightSigns[i] + 2) % 3);
+            //  Adjust part of texture to render
+            switch(i) {
+                case 0: stuff[0][0]->setRectPart(lightParts[lightSigns[i]]); break;
+                case 1: stuff[1][0]->setRectPart(lightParts[lightSigns[i]]); break;
+                case 2: stuff[1][1]->setRectPart(lightParts[lightSigns[i]]); break;
+                case 3: stuff[2][0]->setRectPart(lightParts[lightSigns[i]]); break;
+            }
+            //  Change time of current sign
+            lightTimes[i] = SDL_GetTicks();
+        }
+    }
+
+    // Update obstacles
     int index = 0;
     for (auto &lane : obstacles) {
+        if (lightSigns[index/2] == RED) {
+            ++index;
+            continue;
+        }
         for (int i = 0; i < (int) lane.size(); ++i) {
             if (!lane[i]->Move((index % 4) < 2)) {
                 int type = rand() % this->obstaclePath.size();
@@ -150,7 +208,7 @@ void Controller::updateObstacle(int level) {
                 } while (CheckOverlap(lane, lane[i]));
             }
         }
-        index++;
+        ++index;
     }
 }
 

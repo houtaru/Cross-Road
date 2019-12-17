@@ -19,7 +19,7 @@ class Player: public Object {
         //
         //  @param
         //  stuff: Vector of stuffs to not overlap
-        bool canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
+        void canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
 
     private:
         //  The velocity

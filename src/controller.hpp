@@ -6,6 +6,8 @@
 
 #include <vector>
 
+enum SignLight { RED, YELLOW, GREEN };
+
 class Controller {
     public:
         Controller(int level=1);
@@ -18,11 +20,11 @@ class Controller {
         //  @brief
         //  Handle player character according to inputed events
         //
-        //  @return
-        //  true if the player finishes current level
-        //
         //  @param
         //  event: The event inputed by the player
+        //
+        //  @return
+        //  true if the player finishes current level
         bool handlePlayer(SDL_Event &event);
 
         //  @brief
@@ -34,6 +36,9 @@ class Controller {
 
         //  @brief
         //  Check collision of player
+        //
+        //  @return
+        //  true if there is a collision
         bool checkCollision();
 
         std::vector<std::shared_ptr<Texture>> getObstacles();
@@ -44,12 +49,22 @@ class Controller {
         static const std::vector<int> posY;
         static const std::vector<std::pair<int, int>> posYcurb;
 
+        //  Pointer control player
         std::shared_ptr<Object> player;
+
+        //  Vector control sign of lights
+        std::vector<SignLight> lightSigns;
+        //  Vector control time of lights
+        std::vector<unsigned int> lightTimes;
+        //  Vector of 3 parts of light
+        std::vector<SDL_Rect> lightParts;
 
         //  Path to folder containing images of obstacles
         std::vector<std::string> obstaclePath;
         //  Path to folder containing images of stuffs
         std::vector<std::string> stuffPath;
+        //  Path to light image
+        std::string lightPath;
 
         //  car, truck, dinosaur, bird
         std::vector<std::vector<std::shared_ptr<Object>>> obstacles;
