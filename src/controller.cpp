@@ -196,6 +196,12 @@ void Controller::updateObstacle(int level) {
             continue;
         }
         for (int i = 0; i < (int) lane.size(); ++i) {
+            //  Slow down obstacle when the light is YELLOW
+            if (lightSigns[index/2] == YELLOW)
+                lane[i]->setVel(4);
+            else
+                lane[i]->setVel(7);
+
             if (!lane[i]->Move((index % 4) < 2)) {
                 int type = rand() % this->obstaclePath.size();
                 lane[i] = make_shared<Object>(

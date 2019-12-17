@@ -116,6 +116,13 @@ class Object {
         //  False if object goes further than 0 x-coordinate and true otherwise
         bool Move(bool checkForward);
 
+        //  @brief
+        //  Adjust velocity of obstacle
+        //
+        //  @param
+        //  vel: New velocity
+        void setVel(const int& vel);
+
         //  Function for polymorphism in Player class
         virtual void setVel(SDL_Event &event);
         //  Function for polymorphism in Player class

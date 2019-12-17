@@ -87,6 +87,10 @@ bool Object::Move(bool checkForward) {
     }
 }
 
+void Object::setVel(const int &vel) {
+    velocity[0] = vel;
+}
+
 void Object::setVel(SDL_Event &event) {}
 void Object::canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) {}
 
