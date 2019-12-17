@@ -4,15 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "Build and Run",
             "type": "shell",
-            "command": "echo Hello"
-        }
-    ]
-    "args": [
-        {
-            "-I Z:/Dependencies/SDL2-2.0.5/SLD2",
-            "-L Z:/Dependencies/SDL2-2.0.5/lib/x64"
+            "command": "cd build && cmake .. && make && ./src/cross_road",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

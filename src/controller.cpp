@@ -37,17 +37,6 @@ const vector<pair<int, int>> Controller::posYcurb = {
     {715, Constants::SCREEN_HEIGHT}
 };
 
-shared_ptr<Controller> Controller::instance(nullptr);
-
-// Methods definition
-//
-shared_ptr<Controller> Controller::getInstance() {
-    if (instance == nullptr) {
-        instance = make_shared<Controller>();
-    }
-    return instance;
-}
-
 Controller::Controller(int level)
 {   
     srand(time(NULL));
@@ -135,9 +124,14 @@ Controller::~Controller() {
     //cerr << "Destructing controller...\n";
 }
 
-void Controller::handlePlayer(SDL_Event &event) {
-    player->setVel(event);
+bool Controller::handlePlayer(SDL_Event &event) {
+    while (SDL_PollEvent(&event) != 0)
+        player->setVel(event);
     player->canMove(stuff);
+
+    //  If player finishes the current level, return true
+    if (player->getBox().y + player->getBox().h >= Constants::SCREEN_HEIGHT - 5) return true;
+    return false;
 }
 
 void Controller::updateObstacle(int level) {
@@ -158,6 +152,15 @@ void Controller::updateObstacle(int level) {
         }
         index++;
     }
+}
+
+bool Controller::checkCollision() {
+    for (auto &lane: obstacles) {
+        for (int i = 0; i < (int) lane.size(); ++i) {
+            if (player->isCollision(lane[i])) return true;
+        }
+    }
+    return false;
 }
 
 std::vector<std::shared_ptr<Texture>> Controller::getObstacles() {

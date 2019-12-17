@@ -16,7 +16,7 @@ class ScreenPlay: public Screen {
         virtual ScreenType loop(SDL_Event &event);
     
     private:
-
+        std::shared_ptr<Controller> controller;
         bool newGame;
         int level;
 

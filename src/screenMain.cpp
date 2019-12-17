@@ -107,8 +107,7 @@ void ScreenMain::start() {
     addButton(buttonQuit, buttonQuitCallBack);
 }
 
-void ScreenMain::redraw() {
-}
+void ScreenMain::redraw() {}
 
 ScreenType ScreenMain::loop(SDL_Event &event) {
     Screen::loop(event);

@@ -8,8 +8,6 @@
 
 class Controller {
     public:
-        static std::shared_ptr<Controller> getInstance();
-
         Controller(int level=1);
         virtual ~Controller();
 
@@ -20,9 +18,12 @@ class Controller {
         //  @brief
         //  Handle player character according to inputed events
         //
+        //  @return
+        //  true if the player finishes current level
+        //
         //  @param
         //  event: The event inputed by the player
-        void handlePlayer(SDL_Event &event);
+        bool handlePlayer(SDL_Event &event);
 
         //  @brief
         //  Update position of all obstacles
@@ -40,8 +41,6 @@ class Controller {
         std::shared_ptr<Texture> getPlayer();
 
     private:
-        static std::shared_ptr<Controller> instance;
-        
         static const std::vector<int> posY;
         static const std::vector<std::pair<int, int>> posYcurb;
 

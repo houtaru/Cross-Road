@@ -3,6 +3,8 @@
 #include "pointer.hpp"
 
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -14,6 +16,7 @@ ScreenPlay::ScreenPlay():
         "assets/images/ground/ground_01.png",
         RECT_BACKGROUND
     );
+    controller = make_shared<Controller>(level);
     //cerr << "Constructing Screen Play....\n";
 }
 
@@ -24,7 +27,6 @@ ScreenPlay::~ScreenPlay() {
 void ScreenPlay::start() {
     screenType = nextScreenType = PLAY;
     view->renderTexture(background);
-    // view->renderPresent();
 }
 
 void ScreenPlay::redraw() {
@@ -35,10 +37,27 @@ ScreenType ScreenPlay::loop(SDL_Event &event) {
     if (screenType != nextScreenType) {
         return nextScreenType;
     }
+
     if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-        controller->handlePlayer(event);
+        //  If player finishes the current level
+        if (controller->handlePlayer(event)) {
+            ++level;
+            //  Game just has 5 levels. If complete all of them, CONGRATULATION, YOU WIN
+            if (level > 5) {
+                cerr << "You win!\n";
+                return BACK_TO_PREV;
+            }
+            //  Reset controller for new level
+            controller = make_shared<Controller>(level);
+            //  Start again
+            start();
+        }
     }
-    //updateViewGround();
+
+    if (controller->checkCollision()) {
+        nextScreenType = BACK_TO_PREV;
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+    }
     return nextScreenType;
 }
 
@@ -49,5 +68,4 @@ void ScreenPlay::updateViewGround() {
     view->renderTexture(controller->getObstacles());
     view->renderTexture(controller->getStuff());
     view->renderTexture(controller->getPlayer());
-    view->renderPresent();
 }

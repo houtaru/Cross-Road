@@ -23,7 +23,6 @@ class Screen {
     public:
         static std::shared_ptr<View> view;
         static std::shared_ptr<Sound> sound;
-        static std::shared_ptr<Controller> controller;
         static const SDL_Rect RECT_BACKGROUND;
         
         std::shared_ptr<Texture> background;

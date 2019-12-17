@@ -9,7 +9,6 @@ using namespace std;
 
 shared_ptr<View> Screen::view = View::getInstance();
 shared_ptr<Sound> Screen::sound = Sound::getInstance();
-shared_ptr<Controller> Screen::controller = Controller::getInstance();
 
 const SDL_Rect Screen::RECT_BACKGROUND = {
     0, 0,
@@ -74,8 +73,7 @@ void Screen::clearButton() {
 void Screen::start() {
 }
 
-void Screen::redraw() {
-}
+void Screen::redraw() {}
 
 ScreenType Screen::loop(SDL_Event &event) {
     if (event.type == SDL_MOUSEMOTION) {

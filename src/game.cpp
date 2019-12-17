@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <thread>
+#include <chrono>
 #ifdef __APPLE__
     #include <SDL.h>
 #else
@@ -65,8 +66,7 @@ void Game::loop() {
     auto next_start = std::chrono::steady_clock::now() + FrameDuration{1};
 
     while (running) {
-        while (SDL_PollEvent(&event) != 0 && running) {
-            SDL_PumpEvents();
+        do {
             if (event.type == SDL_QUIT) {
                 running = false;
                 return;
@@ -84,11 +84,10 @@ void Game::loop() {
                     running = false;
                 }
             }
-            view->renderPresent();
-        }
+        } while (SDL_PollEvent(&event) != 0 && running);
+
         screens.back()->redraw();
         view->renderPresent();
-        
         std::this_thread::sleep_until(next_start);
         next_start += FrameDuration{1};
     }

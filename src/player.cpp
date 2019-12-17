@@ -3,8 +3,8 @@
 
 using namespace std;
 
-Player::Player() : Object() { velocity[0] = 4; }
-Player::Player(string path, SDL_Rect rect, bool _flip) : Object(path, rect, _flip) { velocity[0] = 4; }
+Player::Player() : Object(), velX(0), velY(0) { velocity[0] = 4; }
+Player::Player(string path, SDL_Rect rect, bool _flip) : Object(path, rect, _flip), velX(0), velY(0) { velocity[0] = 4; }
 Player::~Player() {}
 
 void Player::setVel(SDL_Event &event) {
