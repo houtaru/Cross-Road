@@ -2,70 +2,116 @@
 #include "constants.hpp"
 #include "pointer.hpp"
 
+#include <fstream>
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 using namespace std;
 
+const SDL_Rect ScreenPlay::RECT_LEVEL = { 1150, 0, 350, 150};
+const SDL_Rect ScreenPlay::RECT_SCORE = { 1400, 0, 350, 150};
+
 ScreenPlay::ScreenPlay():
-    newGame(true),
-    level(1)
+    newGame(true), level(1), startTime(0), finalScore(0)
 {
     background = make_shared<Texture>(
         "assets/images/ground/ground_01.png",
         RECT_BACKGROUND
     );
     controller = make_shared<Controller>(level);
+
+    string s = "LEVEL " + to_string(level);
+    fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
+    s = "SCORE " + to_string(0);
+    fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
+
     //cerr << "Constructing Screen Play....\n";
 }
 
 ScreenPlay::~ScreenPlay() {
+    ifstream fin ;
+    fin.open("data/score.txt") ;
+    int x ;
+    vector<int> score ;
+    for (int i = 0; i < 5; i++) {
+        fin >> x ;
+        score.push_back(x);
+    }
+    score.push_back(finalScore);
+    sort(score.begin(),score.end(), greater<>());
+    fin.close();
+    
+    ofstream fout;
+    fout.open("data/score.txt") ;
+    for (int i = 0; i < 5; i++)
+        fout << score[i] << endl ;
+    fout.close() ;
     //cerr << "Destructing Screen Play...\n";
 }
 
-void ScreenPlay::start() {
+void ScreenPlay::Start() {
     screenType = nextScreenType = PLAY;
-    view->renderTexture(background);
+    view->RenderTexture(background);
+    startTime = SDL_GetTicks();
 }
 
-void ScreenPlay::redraw() {
-    updateViewGround();
+void ScreenPlay::Redraw() {
+    UpdateViewGround();
 }
 
-ScreenType ScreenPlay::loop(SDL_Event &event) {
+ScreenType ScreenPlay::Loop(SDL_Event &event) {
     if (screenType != nextScreenType) {
         return nextScreenType;
     }
 
     if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
         //  If player finishes the current level
-        if (controller->handlePlayer(event)) {
+        if (controller->HandlePlayer(event)) {
+            finalScore += NormalScore(SDL_GetTicks() - startTime, level);
             ++level;
+            
             //  Game just has 5 levels. If complete all of them, CONGRATULATION, YOU WIN
             if (level > 5) {
                 cerr << "You win!\n";
                 return BACK_TO_PREV;
             }
+            
+            //  Update score and level display
+            string s = "LEVEL " + to_string(level);
+            fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
+            s = "SCORE " + to_string(finalScore);
+            fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
+            
             //  Reset controller for new level
             controller = make_shared<Controller>(level);
             //  Start again
-            start();
+            Start();
         }
     }
 
-    if (controller->checkCollision()) {
+    if (controller->CheckCollision()) {
         nextScreenType = BACK_TO_PREV;
         std::this_thread::sleep_for(std::chrono::seconds(3));
     }
     return nextScreenType;
 }
 
-void ScreenPlay::updateViewGround() {
-    controller->updateObstacle(level);
+int ScreenPlay::NormalScore(int time, int level) {
+    if (level*1000 - time/50 > 0)
+        return level*1000 - time/50;
+    else
+        return 0;
+}
 
-    view->renderTexture(background);
-    view->renderTexture(controller->getObstacles());
-    view->renderTexture(controller->getStuff());
-    view->renderTexture(controller->getPlayer());
+void ScreenPlay::UpdateViewGround() {
+    controller->Update(level);
+
+    view->RenderTexture(background);
+    view->RenderTexture(controller->GetObstacles());
+    view->RenderTexture(controller->GetStuff());
+    view->RenderTexture(controller->GetPlayer());
+    
+    view->RenderFontObject(fontLevel, 2);
+    view->RenderFontObject(fontScore, 2);
 }

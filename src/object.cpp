@@ -16,36 +16,36 @@ Object::Object(string path, SDL_Rect rect, bool _flip, SDL_Rect rect_part):
 
 Object::~Object() {}
 
-SDL_Rect Object::getBox() const { return SDL_Rect({x, y, w, h}); }
+SDL_Rect Object::GetBox() const { return SDL_Rect({x, y, w, h}); }
 
-shared_ptr<Texture> Object::getTexture() const { return obj; }
+shared_ptr<Texture> Object::GetTexture() const { return obj; }
 
-void Object::setX(int _posX) {
+void Object::SetX(int _posX) {
     obj->rect.x = x = _posX;
 }
 
-void Object::setY(int _posY) {
+void Object::SetY(int _posY) {
     obj->rect.y = _posY;
     y = _posY + (obj->rect.h - Constants::OBJECT_HEIGHT);
 }
 
-void Object::setW(int _w) {
+void Object::SetW(int _w) {
     w = _w;
     x = obj->rect.x + (obj->rect.w - w)/2;
 }
 
-void Object::setH(int _h) {
+void Object::SetH(int _h) {
     h = _h;
     y = obj->rect.y + (obj->rect.h - h);
 }
 
-void Object::setRectPart(SDL_Rect _rect_part) {
+void Object::SetRectPart(SDL_Rect _rect_part) {
     obj->rect_part = _rect_part;
 }
 
-bool Object::isCollision(std::shared_ptr<Object> &other) {
-    SDL_Rect otherBox = other->getBox();
-    SDL_Rect box = this->getBox();
+bool Object::IsCollision(std::shared_ptr<Object> &other) {
+    SDL_Rect otherBox = other->GetBox();
+    SDL_Rect box = this->GetBox();
 
     //  The sides of the rectangles
     int leftA, leftB;
@@ -87,12 +87,12 @@ bool Object::Move(bool checkForward) {
     }
 }
 
-void Object::setVel(const int &vel) {
+void Object::SetVel(const int &vel) {
     velocity[0] = vel;
 }
 
-void Object::setVel(SDL_Event &event) {}
-void Object::canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) {}
+void Object::SetVel(SDL_Event &event) {}
+void Object::CanMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff) {}
 
 
 //  ------------------------------

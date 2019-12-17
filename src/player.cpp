@@ -7,7 +7,7 @@ Player::Player() : Object(), velX(0), velY(0) { velocity[0] = 4; }
 Player::Player(string path, SDL_Rect rect, bool _flip) : Object(path, rect, _flip), velX(0), velY(0) { velocity[0] = 4; }
 Player::~Player() {}
 
-void Player::setVel(SDL_Event &event) {
+void Player::SetVel(SDL_Event &event) {
      //  If a key was pressed or release
     if (event.type == SDL_KEYDOWN && event.key.repeat == 0) {
         switch (event.key.keysym.sym) {
@@ -28,7 +28,7 @@ void Player::setVel(SDL_Event &event) {
     }
 }
 
-void Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
+void Player::CanMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
     //  Move the player left or right
     obj->rect.x += velX;
     x = obj->rect.x;
@@ -37,7 +37,7 @@ void Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
     //  If the player overlapped stuff
     for (int i = 0; i < stuff.size(); ++i) {
         for (int j = 0; j < stuff[i].size(); ++j)
-            if (isCollision(stuff[i][j])) {
+            if (IsCollision(stuff[i][j])) {
                 obj->rect.x -= velX;
             }
     }
@@ -50,7 +50,7 @@ void Player::canMove(std::vector<std::vector<shared_ptr<Object>>> &stuff) {
     //  If the player overlapped stuff
     for (int i = 0; i < stuff.size(); ++i) {
         for (int j = 0; j < stuff[i].size(); ++j)
-            if (isCollision(stuff[i][j])) {
+            if (IsCollision(stuff[i][j])) {
                 obj->rect.y -= velY;
             }
     }

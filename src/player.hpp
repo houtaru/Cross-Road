@@ -12,14 +12,14 @@ class Player: public Object {
         //
         //  @param
         //  event: Event from player
-        void setVel(SDL_Event &event);
+        void SetVel(SDL_Event &event);
         
         //  @brief
         //  Move the player
         //
         //  @param
         //  stuff: Vector of stuffs to not overlap
-        void canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
+        void CanMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
 
     private:
         //  The velocity

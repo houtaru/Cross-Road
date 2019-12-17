@@ -10,13 +10,11 @@ enum ScreenType {
     BACK_TO_PREV = -1,
     MAIN = 0,
     PLAY = 1,
-    PAUSE = 2,
-    INSTRUCTION = 3,
-    BEFORE_END = 4,
-    ENDGAME = 5,
-    SETTING = 6,
-    QUIT = 7,
-    LOADGAME = 8
+    HIGHSCORE = 2,
+    SETTING = 3,
+    QUIT = 4,
+    PAUSE = 5,
+    ENDGAME = 6
 };
 
 class Screen {
@@ -31,17 +29,17 @@ class Screen {
         Screen();
         virtual ~Screen();
 
-        static std::shared_ptr<Screen> createScreenFromScreenType(ScreenType ScreenType);
+        static std::shared_ptr<Screen> CreateScreenFromScreenType(ScreenType ScreenType);
 
-        void addButton(std::shared_ptr<Texture> buttonView, std::function<void()> onMouseClick);
-        void setButtonDefault(std::shared_ptr<Texture> buttonView, std::function<void()> onMouseClick);
-        void clearButton();
+        void AddButton(std::shared_ptr<Texture> buttonView, std::function<void()> onMouseClick);
+        void SetButtonDefault(std::shared_ptr<Texture> buttonView, std::function<void()> onMouseClick);
+        void ClearButton();
 
-        virtual void start();
-        virtual void redraw();
-        virtual ScreenType loop(SDL_Event &event);
+        virtual void Start();
+        virtual void Redraw();
+        virtual ScreenType Loop(SDL_Event &event);
 
-        ScreenType getType();
+        ScreenType GetType();
 
     private:
         bool buttonDefaultState;
@@ -50,8 +48,8 @@ class Screen {
         std::vector<Button> buttons;
         
         // Check if mouse goes over rectangle
-        bool isMouseOverRect(const SDL_Rect &rect);
+        bool IsMouseOverRect(const SDL_Rect &rect);
 
         // Handling mouse motion
-        void handleMouse(std::function<void(Button button)> callbackRender, std::function<void(Button button)> callBackClick);
+        void HandleMouse(std::function<void(Button button)> callbackRender, std::function<void(Button button)> callBackClick);
 };

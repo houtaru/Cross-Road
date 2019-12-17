@@ -25,25 +25,25 @@ class Controller {
         //
         //  @return
         //  true if the player finishes current level
-        bool handlePlayer(SDL_Event &event);
+        bool HandlePlayer(SDL_Event &event);
 
         //  @brief
         //  Update position of all obstacles
         //
         //  @param
         //  level: The current level of game
-        void updateObstacle(int level);
+        void Update(int level);
 
         //  @brief
         //  Check collision of player
         //
         //  @return
         //  true if there is a collision
-        bool checkCollision();
+        bool CheckCollision();
 
-        std::vector<std::shared_ptr<Texture>> getObstacles();
-        std::vector<std::shared_ptr<Texture>> getStuff();
-        std::shared_ptr<Texture> getPlayer();
+        std::vector<std::shared_ptr<Texture>> GetObstacles();
+        std::vector<std::shared_ptr<Texture>> GetStuff();
+        std::shared_ptr<Texture> GetPlayer();
 
     private:
         static const std::vector<int> posY;

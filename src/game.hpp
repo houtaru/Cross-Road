@@ -9,14 +9,14 @@
 
 class Game {
 	public:
-		static std::shared_ptr<Game> getInstance();
+		static std::shared_ptr<Game> GetInstance();
 
 		Game();
 		virtual ~Game();
 
-		void start();
+		void Start();
 
-		const Uint8 *getKeystate();
+		const Uint8 *GetKeystate();
 	
 	private:
 		static std::shared_ptr<Game> instance;
@@ -32,14 +32,14 @@ class Game {
 		std::vector<std::shared_ptr<Screen>> screens;
 
 		// Initialize game
-		void init();
+		void Init();
 
 		// Main loop
-		void loop();
+		void Loop();
 		
 		// return to previous screen
-		void backToPreScr();
+		void BackToPreScr();
 
 		// switch to next screen
-		void switchToNextScr(ScreenType nextScreenType);
+		void SwitchToNextScr(ScreenType nextScreenType);
 };

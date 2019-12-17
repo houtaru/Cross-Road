@@ -64,73 +64,73 @@ ScreenMain::~ScreenMain() {
     //cerr << "Destructing main screen.\n";
 }
 
-void ScreenMain::start() {
+void ScreenMain::Start() {
     screenType = nextScreenType = MAIN;
-    view->renderTexture(background);
+    view->RenderTexture(background);
 
-    clearButton();
-    setButtonDefault(background, nullptr);
+    ClearButton();
+    SetButtonDefault(background, nullptr);
     
     // start button
     function<void()> buttonStartCallBack = bind(
-        &ScreenMain::onClickButtonStart,
+        &ScreenMain::OnClickButtonStart,
         this
     );
-    addButton(buttonStart, buttonStartCallBack);
+    AddButton(buttonStart, buttonStartCallBack);
 
     // load game button
     function<void()> buttonLoadGameCallBack = bind(
-        &ScreenMain::onClickButtonLoadGame,
+        &ScreenMain::OnClickButtonLoadGame,
         this
     );
-    addButton(buttonLoad, buttonLoadGameCallBack);
+    AddButton(buttonLoad, buttonLoadGameCallBack);
 
     // highscore button
     function<void()> buttonHighscoreCallBack = bind(
-        &ScreenMain::onClickButtonHighscore,
+        &ScreenMain::OnClickButtonHighscore,
         this
     );
-    addButton(buttonHighscore, buttonHighscoreCallBack);
+    AddButton(buttonHighscore, buttonHighscoreCallBack);
     
     // setting button
     function<void()> buttonSettingCallBack = bind(
-        &ScreenMain::onClickButtonSetting,
+        &ScreenMain::OnClickButtonSetting,
         this
     );
-    addButton(buttonSetting, buttonSettingCallBack);
+    AddButton(buttonSetting, buttonSettingCallBack);
     
     // quit button
     function<void()> buttonQuitCallBack = bind(
-        &ScreenMain::onClickButtonQuit,
+        &ScreenMain::OnClickButtonQuit,
         this
     );
-    addButton(buttonQuit, buttonQuitCallBack);
+    AddButton(buttonQuit, buttonQuitCallBack);
 }
 
-void ScreenMain::redraw() {}
+void ScreenMain::Redraw() {}
 
-ScreenType ScreenMain::loop(SDL_Event &event) {
-    Screen::loop(event);
+ScreenType ScreenMain::Loop(SDL_Event &event) {
+    Screen::Loop(event);
     return nextScreenType;
 }
 
-void ScreenMain::onClickButtonStart() {
+void ScreenMain::OnClickButtonStart() {
     nextScreenType = PLAY;
 }
 
-void ScreenMain::onClickButtonLoadGame() {
-    nextScreenType = LOADGAME;
+void ScreenMain::OnClickButtonLoadGame() {
+    nextScreenType = PLAY;
 }
 
-void ScreenMain::onClickButtonHighscore() {
-    nextScreenType = ENDGAME;
+void ScreenMain::OnClickButtonHighscore() {
+    nextScreenType = HIGHSCORE;
 }
 
-void ScreenMain::onClickButtonSetting() {
+void ScreenMain::OnClickButtonSetting() {
     nextScreenType = SETTING;
 }
 
-void ScreenMain::onClickButtonQuit() {
+void ScreenMain::OnClickButtonQuit() {
     nextScreenType = QUIT;
 }
 

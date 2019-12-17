@@ -85,18 +85,18 @@ class Object {
         Object(std::string path, SDL_Rect rect, bool _flip=false, SDL_Rect rect_part={0, 0, 0, 0});
         virtual ~Object();
 
-        SDL_Rect getBox() const;
+        SDL_Rect GetBox() const;
 
-        std::shared_ptr<Texture> getTexture() const;
+        std::shared_ptr<Texture> GetTexture() const;
         
-        void setX(int _posX);
-        void setY(int _posY);
-        void setW(int _w);
-        void setH(int _h);
+        void SetX(int _posX);
+        void SetY(int _posY);
+        void SetW(int _w);
+        void SetH(int _h);
         
         //  @brief
         //  Set rectangle for rendering a part of texture
-        void setRectPart(SDL_Rect _rect_part);
+        void SetRectPart(SDL_Rect _rect_part);
 
         //  @brief
         //  Check whether object collides other object or not
@@ -104,7 +104,7 @@ class Object {
         //  @param:
         //  other: Other object on screen
         //
-        bool isCollision(std::shared_ptr<Object> &other);
+        bool IsCollision(std::shared_ptr<Object> &other);
 
         //  @brief
         //  Move the object
@@ -121,12 +121,12 @@ class Object {
         //
         //  @param
         //  vel: New velocity
-        void setVel(const int& vel);
+        void SetVel(const int& vel);
 
         //  Function for polymorphism in Player class
-        virtual void setVel(SDL_Event &event);
+        virtual void SetVel(SDL_Event &event);
         //  Function for polymorphism in Player class
-        virtual void canMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
+        virtual void CanMove(std::vector<std::vector<std::shared_ptr<Object>>> &stuff);
 
     protected:
         std::vector<int> velocity; // 0/1: X/Y velocity

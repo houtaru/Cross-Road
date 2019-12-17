@@ -13,13 +13,13 @@
 using namespace std;
 
 shared_ptr<Game> Game::instance(nullptr);
-shared_ptr<View> Game::view = View::getInstance();
-shared_ptr<Sound> Game::sound = Sound::getInstance();
+shared_ptr<View> Game::view = View::GetInstance();
+shared_ptr<Sound> Game::sound = Sound::GetInstance();
 
 const int Game::FRAME_PER_SECOND = 60;
 const int Game::SDL_DELAY_PER_FRAME = 1000 / FRAME_PER_SECOND;
 
-shared_ptr<Game> Game::getInstance() {
+shared_ptr<Game> Game::GetInstance() {
     if (instance == nullptr)
         instance = make_shared<Game>();
     return instance;
@@ -38,27 +38,27 @@ Game::~Game() {
     //cerr << "Destructing Game...\n";
 }
 
-void Game::start() {
+void Game::Start() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         throw Exception(SDL_GetError());
     }
     //cerr << "Start game...\n";
-    init();
-    loop();
+    Init();
+    Loop();
 }
 
-void Game::init() {
+void Game::Init() {
     //cerr << "  Game initalization..\n";
-    view->startSDL();
-    sound->initSound();
+    view->StartSDL();
+    sound->InitSound();
     
-    screens.push_back(Screen::createScreenFromScreenType(MAIN));
-    screens.back()->start();
+    screens.push_back(Screen::CreateScreenFromScreenType(MAIN));
+    screens.back()->Start();
     running = true;
-    view->renderPresent();
+    view->RenderPresent();
 }
 
-void Game::loop() {
+void Game::Loop() {
     //cerr << "  Game loop...\n";
     keystate = SDL_GetKeyboardState(NULL);
 
@@ -72,41 +72,42 @@ void Game::loop() {
                 return;
             }
 
-            ScreenType nextScreenType = screens.back()->loop(event);
-            if (nextScreenType != screens.back()->getType()) {
+            ScreenType nextScreenType = screens.back()->Loop(event);
+            if (nextScreenType != screens.back()->GetType()) {
                 if (nextScreenType == BACK_TO_PREV) {
                     //cerr << "Back to previous screen!\n";
-                    backToPreScr();
+                    BackToPreScr();
                 } else if (nextScreenType != QUIT) {
                     //cerr << "Switch to next screen.\n";
-                    switchToNextScr(nextScreenType);
+                    SwitchToNextScr(nextScreenType);
                 } else {
                     running = false;
                 }
             }
+            SDL_PumpEvents();
         } while (SDL_PollEvent(&event) != 0 && running);
 
-        screens.back()->redraw();
-        view->renderPresent();
+        screens.back()->Redraw();
+        view->RenderPresent();
         std::this_thread::sleep_until(next_start);
         next_start += FrameDuration{1};
     }
 }
 
-const Uint8 *Game::getKeystate() {
+const Uint8 *Game::GetKeystate() {
     return keystate;
 }
 
-void Game::backToPreScr() {
+void Game::BackToPreScr() {
     screens.pop_back();
     if (screens.empty()) {
         running = false;
         return;
     }
-    screens.back()->start();
+    screens.back()->Start();
 }
 
-void Game::switchToNextScr(ScreenType nextScreenType) {
-    screens.push_back(Screen::createScreenFromScreenType(nextScreenType));
-    screens.back()->start();
+void Game::SwitchToNextScr(ScreenType nextScreenType) {
+    screens.push_back(Screen::CreateScreenFromScreenType(nextScreenType));
+    screens.back()->Start();
 }

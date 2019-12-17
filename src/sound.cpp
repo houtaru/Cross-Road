@@ -6,7 +6,7 @@ using namespace std;
 
 shared_ptr<Sound> Sound::instance(nullptr);
 
-shared_ptr<Sound> Sound::getInstance() {
+shared_ptr<Sound> Sound::GetInstance() {
     if (instance == nullptr)
         instance = make_shared<Sound>();
     return instance;
@@ -25,33 +25,33 @@ Sound::~Sound() {
     //cerr << "Destructing Sound...\n";
 }
 
-void Sound::initSound() {
+void Sound::InitSound() {
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2028 < 0))
         throw Exception(Mix_GetError());
     
-    background = Pointer::createMixMusic(
+    background = Pointer::CreateMixMusic(
         Mix_LoadMUS("assets/sounds/theme.wav")
     );
-    diedScene = Pointer::createMixChunk(
+    diedScene = Pointer::CreateMixChunk(
         Mix_LoadWAV("assets/sounds/die.wav")
     );
-    playBackgound();
+    PlayBackgound();
 }
 
-void Sound::playBackgound() {
+void Sound::PlayBackgound() {
     if (!state) return;
     if (Mix_PlayingMusic() == 0)
         Mix_PlayMusic(background.get(), -1);
 }
 
-void Sound::playDiedScene() {
+void Sound::PlayDiedScene() {
     if (!state) return;
     if (Mix_PlayingMusic() != 0)
         Mix_HaltMusic();
     Mix_PlayChannel(-1, diedScene.get(), 0);
 }
 
-void Sound::changeState() {
+void Sound::ChangeState() {
     state ^= 1;
     if (Mix_PlayingMusic() != 0) 
         Mix_HaltMusic();

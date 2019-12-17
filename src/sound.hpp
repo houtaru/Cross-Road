@@ -9,21 +9,21 @@
 
 class Sound {
     public:
-        static std::shared_ptr<Sound> getInstance();
+        static std::shared_ptr<Sound> GetInstance();
         Sound();
         virtual ~Sound();
 
         // Initialize SDL_Mixer library for sound
-        void initSound();
+        void InitSound();
 
         // change state of state
-        void changeState();
+        void ChangeState();
         
         // background music throughout the game
-        void playBackgound();
+        void PlayBackgound();
         
         // the sound play when player hit obstacles
-        void playDiedScene();
+        void PlayDiedScene();
         
     private:
         bool state;
