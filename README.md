@@ -15,7 +15,7 @@ SDL2_ttf
 
 ### Build
 First create a foler named build, which will be used to build and run everything. Typing the following lines in the command line to build. <br />
-*Tips: If you want more obstacle skins, paste them into **assets/images/obstacle/** before build the game. Or remove **build** folder and do this step again to update skin.*
+*Tips: If you want more obstacle skins, paste them into **assets/images/obstacle/** before build the game, or remove **build** folder and do this step again to update skin.*
 ```
 mkdir build
 cd build
