@@ -43,7 +43,7 @@ class Screen {
 
         ScreenType GetType();
 
-    private:
+    protected:
         bool buttonDefaultState;
         Button buttonDefault;
         std::vector<bool> buttonStates;

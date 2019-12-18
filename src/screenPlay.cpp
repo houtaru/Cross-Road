@@ -21,9 +21,9 @@ ScreenPlay::ScreenPlay(bool newGame) :
     );
     
     if (newGame) 
-        controller = make_shared<Controller>(level);
+        controller = make_shared<Controller>(level, Constants::boy);
     else 
-        controller = make_shared<Controller>(true, level, finalScore);
+        controller = make_shared<Controller>(level, finalScore);
 
     string s = "LEVEL " + to_string(level);
     fontLevel = make_shared<FontObject>(s, 40, RECT_LEVEL);
@@ -96,7 +96,7 @@ ScreenType ScreenPlay::Loop(SDL_Event &event) {
                     fontScore = make_shared<FontObject>(s, 40, RECT_SCORE);
                     
                     //  Reset controller for new level
-                    controller = make_shared<Controller>(level);
+                    controller = make_shared<Controller>(level, Constants::boy);
                     //  Start again
                     Start();
                 }
@@ -105,6 +105,7 @@ ScreenType ScreenPlay::Loop(SDL_Event &event) {
 
     if (controller->CheckCollision()) {
         nextScreenType = BACK_TO_PREV;
+        sound->PlayDiedScene();
         std::this_thread::sleep_for(std::chrono::seconds(3));
     }
     return nextScreenType;

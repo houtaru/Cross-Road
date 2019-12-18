@@ -10,8 +10,8 @@ enum SignLight { RED, YELLOW, GREEN };
 
 class Controller {
     public:
-        Controller(int level=1);
-        Controller(bool load, int &level, int &finalScore);
+        Controller(int level=1, bool _boy=true);
+        Controller(int &level, int &finalScore);
         virtual ~Controller();
 
         //  Data manipulations
@@ -57,6 +57,7 @@ class Controller {
     private:
         static const std::vector<int> posY;
         static const std::vector<std::pair<int, int>> posYcurb;
+        bool boy;
 
         //  Pointer control player
         std::shared_ptr<Object> player;

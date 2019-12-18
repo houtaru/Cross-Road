@@ -38,13 +38,14 @@ const vector<pair<int, int>> Controller::posYcurb = {
     {715, Constants::SCREEN_HEIGHT}
 };
 
-Controller::Controller(int level)
+Controller::Controller(int level, bool _boy)
 {   
     srand(time(NULL));
     //cerr << "Constructing controller...\n";
     Glob(obstaclePath, "assets/images/obstacle/*");
     Glob(stuffPath, "assets/images/stuff/*");
     lightPath = "assets/images/light/light_01.png";
+    this->boy = _boy;
 
     //  Initialize obstacles
     int index = 0;
@@ -61,7 +62,7 @@ Controller::Controller(int level)
 
             //  Random x-coordinate and check overlap with other objects' position
             do { 
-                int pos = rand() % ((8 - level)*Constants::SCREEN_WIDTH/2);
+                int pos = rand() % ((10 - level)*Constants::SCREEN_WIDTH/2);
                 pos = ((index % 4) > 1 ? Constants::SCREEN_WIDTH - pos : pos);
                 //  Set new position
                 temp->SetX(pos);
@@ -138,7 +139,13 @@ Controller::Controller(int level)
     }
 
     //  Initializer player
-    string pathPlayer = "assets/images/player/player_01.png";
+    std::string pathPlayer ;
+    if (boy ==1)
+        pathPlayer = "assets/images/player/player_01.png";
+    else
+    {
+        pathPlayer = "assets/images/player/player_02.png";
+    }
     player = make_shared<Player>(
         pathPlayer, GetRect(pathPlayer, Constants::SCREEN_WIDTH/2, 0)
     );
@@ -168,13 +175,11 @@ void LoadObject(ifstream &os, std::shared_ptr<Object> &object) {
     os >> flip;
 
     object = make_shared<Object>(path, _rect, flip != 0);
-    // object->SetX(boundingBox.x);
-    // object->SetW(boundingBox.w);
-    // object->SetY(boundingBox.y);
-    // object->SetH(boundingBox.h);
+    object->SetW(boundingBox.w);
+    object->SetH(boundingBox.h);
 }
 
-Controller::Controller(bool load, int &level, int &finalScore) {
+Controller::Controller(int &level, int &finalScore) {
     srand(time(NULL));
     //cerr << "Constructing controller...\n";
     Glob(obstaclePath, "assets/images/obstacle/*");
@@ -185,7 +190,10 @@ Controller::Controller(bool load, int &level, int &finalScore) {
     fin >> level >> finalScore;
 
     //  Load player
-    LoadObject(fin, player);
+    //LoadObject(fin, player);
+    std::shared_ptr<Object> temp;
+    LoadObject(fin, temp);
+    player = make_shared<Player>(temp->GetTexture()->path, temp->GetTexture()->rect);
 
     //  Load obstacles
     int index = 0;
@@ -300,7 +308,7 @@ void Controller::Update(int level) {
                     obstaclePath[type], GetRect(obstaclePath[type], 0, posY[index]), (index % 4) > 1
                 );
                 do {
-                    int pos = rand() % ((6 - level)*Constants::SCREEN_WIDTH/2);
+                    int pos = rand() % ((8 - level)*Constants::SCREEN_WIDTH/2);
                     pos = ((index % 4) > 1 ? -pos : pos + Constants::SCREEN_WIDTH);
                     lane[i]->SetX(pos);
                 } while (CheckOverlap(lane, lane[i]));

@@ -4,6 +4,7 @@
 #include "screenPlay.hpp"
 #include "screenScore.hpp"
 #include "screenPause.hpp"
+#include "screenSetting.hpp"
 
 #include <iostream>
 
@@ -45,6 +46,9 @@ shared_ptr<Screen> Screen::CreateScreenFromScreenType(ScreenType screenType) {
             break;
         case PAUSE:
             return shared_ptr<Screen>((Screen*) new ScreenPause());
+            break;
+        case SETTING:
+            return shared_ptr<Screen>((Screen*) new ScreenSetting());
             break;
         default:
             throw "No such Screen!\n";

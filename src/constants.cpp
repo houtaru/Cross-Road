@@ -17,3 +17,8 @@ const int Constants::VEHICLE_HEIGHT = 50;
 const int Constants::RED_DURATION = 3000;
 const int Constants::YELLOW_DURATION = 1000;
 const int Constants::GREEN_DURATION = 5000;
+bool Constants::boy =true ;
+void Constants::changeCharacter(bool _boy)
+    { 
+        boy = _boy;
+    }

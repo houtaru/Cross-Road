@@ -17,8 +17,9 @@ class Sound {
         void InitSound();
 
         // change state of state
-        void ChangeState();
-        
+        void ChangeState(bool sound_on);
+        bool getState();
+
         // background music throughout the game
         void PlayBackgound();
         

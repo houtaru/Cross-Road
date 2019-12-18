@@ -13,7 +13,7 @@ shared_ptr<Sound> Sound::GetInstance() {
 }
 
 Sound::Sound():
-    state(false),
+    state(true),
     background(nullptr),
     diedScene(nullptr)
 {
@@ -46,13 +46,17 @@ void Sound::PlayBackgound() {
 
 void Sound::PlayDiedScene() {
     if (!state) return;
-    if (Mix_PlayingMusic() != 0)
-        Mix_HaltMusic();
+    // if (Mix_PlayingMusic() != 0)
+    //     Mix_HaltMusic();
     Mix_PlayChannel(-1, diedScene.get(), 0);
 }
-
-void Sound::ChangeState() {
-    state ^= 1;
-    if (Mix_PlayingMusic() != 0) 
+bool Sound::getState() {
+    return state;
+} 	
+void Sound::ChangeState(bool sound_on) {
+    state = sound_on ;
+    if (Mix_PlayingMusic() != 0 && !state ) 
         Mix_HaltMusic();
+    if (state && !Mix_PlayingMusic())
+        PlayBackgound() ;
 }

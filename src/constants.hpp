@@ -20,4 +20,7 @@ namespace Constants {
     extern const int GREEN_DURATION;
     
     extern const char* const GAME_TITLE;
+    extern bool boy;
+
+    extern void changeCharacter(bool _boy); 
 }
