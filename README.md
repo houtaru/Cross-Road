@@ -18,8 +18,3 @@ cmake ..
 make
 ./src/cross_road
 ```
-
-### Test
-```
-./test/unit_tests
-```

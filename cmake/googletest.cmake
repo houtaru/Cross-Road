@@ -29,4 +29,8 @@ macro(fetch_googletest _download_module_path _download_root)
         ${_download_root}/googletest-src
         ${_download_root}/googletest-build
         )
+<<<<<<< HEAD
 endmacro()
+=======
+endmacro()
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e

@@ -17,6 +17,7 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 endif()
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY data DESTINATION ${CMAKE_BINARY_DIR})
 add_subdirectory(src)
 
 include(${PROJECT_SOURCE_DIR}/cmake/googletest.cmake)

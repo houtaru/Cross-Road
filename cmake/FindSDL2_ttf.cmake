@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 # Locate SDL_image library
+=======
+# Locate SDL_ttf library
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e
 #
 # This module defines:
 #
 # ::
 #
+<<<<<<< HEAD
 #   SDL_TTF_LIBRARIES, the name of the library to link against
 #   SDL_TTF_INCLUDE_DIRS, where to find the headers
 #   SDL_TTF_FOUND, if false, do not try to link against
@@ -18,6 +23,22 @@
 #   SDLTTF_LIBRARY (same value as SDL_TTF_LIBRARIES)
 #   SDLTTF_INCLUDE_DIR (same value as SDL_TTF_INCLUDE_DIRS)
 #   SDLTTF_FOUND (same value as SDL_TTF_FOUND)
+=======
+#   SDL2_TTF_LIBRARIES, the name of the library to link against
+#   SDL2_TTF_INCLUDE_DIRS, where to find the headers
+#   SDL2_TTF_FOUND, if false, do not try to link against
+#   SDL2_TTF_VERSION_STRING - human-readable string containing the version of SDL_ttf
+#
+#
+#
+# For backward compatibility the following variables are also set:
+#
+# ::
+#
+#   SDLTTF_LIBRARY (same value as SDL2_TTF_LIBRARIES)
+#   SDLTTF_INCLUDE_DIR (same value as SDL2_TTF_INCLUDE_DIRS)
+#   SDLTTF_FOUND (same value as SDL2_TTF_FOUND)
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e
 #
 #
 #
@@ -43,6 +64,7 @@
 #  License text for the above reference.)
 
 find_path(SDL2_TTF_INCLUDE_DIR SDL_ttf.h
+<<<<<<< HEAD
   HINTS
     ENV SDL2TTFDIR
     ENV SDL2DIR
@@ -80,6 +102,47 @@ if(SDL2_TTF_INCLUDE_DIR AND EXISTS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h")
   unset(SDL2_TTF_VERSION_MINOR)
   unset(SDL2_TTF_VERSION_PATCH)
 endif()
+=======
+        HINTS
+        ENV SDL2TTFDIR
+        ENV SDL2DIR
+        PATH_SUFFIXES SDL2
+        # path suffixes to search inside ENV{SDLDIR}
+        include/SDL2 include
+        PATHS ${SDL2_TTF_PATH}
+        )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(VC_LIB_PATH_SUFFIX lib/x64)
+else ()
+    set(VC_LIB_PATH_SUFFIX lib/x86)
+endif ()
+
+find_library(SDL2_TTF_LIBRARY
+        NAMES SDL2_ttf
+        HINTS
+        ENV SDL2TTFDIR
+        ENV SDL2DIR
+        PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
+        PATHS ${SDL2_TTF_PATH}
+        )
+
+if (SDL2_TTF_INCLUDE_DIR AND EXISTS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_MAJOR_LINE REGEX "^#define[ \t]+SDL_TTF_MAJOR_VERSION[ \t]+[0-9]+$")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_MINOR_LINE REGEX "^#define[ \t]+SDL_TTF_MINOR_VERSION[ \t]+[0-9]+$")
+    file(STRINGS "${SDL2_TTF_INCLUDE_DIR}/SDL_ttf.h" SDL2_TTF_VERSION_PATCH_LINE REGEX "^#define[ \t]+SDL_TTF_PATCHLEVEL[ \t]+[0-9]+$")
+    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_MAJOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MAJOR "${SDL2_TTF_VERSION_MAJOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_MINOR_VERSION[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_MINOR "${SDL2_TTF_VERSION_MINOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+SDL_TTF_PATCHLEVEL[ \t]+([0-9]+)$" "\\1" SDL2_TTF_VERSION_PATCH "${SDL2_TTF_VERSION_PATCH_LINE}")
+    set(SDL2_TTF_VERSION_STRING ${SDL2_TTF_VERSION_MAJOR}.${SDL2_TTF_VERSION_MINOR}.${SDL2_TTF_VERSION_PATCH})
+    unset(SDL2_TTF_VERSION_MAJOR_LINE)
+    unset(SDL2_TTF_VERSION_MINOR_LINE)
+    unset(SDL2_TTF_VERSION_PATCH_LINE)
+    unset(SDL2_TTF_VERSION_MAJOR)
+    unset(SDL2_TTF_VERSION_MINOR)
+    unset(SDL2_TTF_VERSION_PATCH)
+endif ()
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e
 
 set(SDL2_TTF_LIBRARIES ${SDL2_TTF_LIBRARY})
 set(SDL2_TTF_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIR})
@@ -87,6 +150,7 @@ set(SDL2_TTF_INCLUDE_DIRS ${SDL2_TTF_INCLUDE_DIR})
 include(FindPackageHandleStandardArgs)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_ttf
+<<<<<<< HEAD
                                   REQUIRED_VARS SDL2_TTF_LIBRARIES SDL2_TTF_INCLUDE_DIRS
                                   VERSION_VAR SDL2_TTF_VERSION_STRING)
 
@@ -96,3 +160,12 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2_ttf
 #set(SDLTTF_FOUND ${SDL_TTF_FOUND})
 
 mark_as_advanced(SDL2_TTF_LIBRARY SDL2_TTF_INCLUDE_DIR)
+=======
+        REQUIRED_VARS SDL2_TTF_LIBRARIES SDL2_TTF_INCLUDE_DIRS
+        VERSION_VAR SDL2_TTF_VERSION_STRING)
+
+# for backward compatibility
+set(SDLTTF_LIBRARY ${SDL2_TTF_LIBRARIES})
+set(SDLTTF_INCLUDE_DIR ${SDL2_TTF_INCLUDE_DIRS})
+set(SDLTTF_FOUND ${SDL2_TTF_FOUND})
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e

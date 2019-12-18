@@ -17,4 +17,8 @@ ExternalProject_Add(
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
   TEST_COMMAND ""
+<<<<<<< HEAD
   )
+=======
+  )
+>>>>>>> 7584de2b23d314ed3dd85215d1d3c0393344de1e
